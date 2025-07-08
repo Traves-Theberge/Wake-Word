@@ -1,5 +1,5 @@
 {
-  "name": "claude-wake-word-detector",
+  "name": "wake-word-detector",
   "version": "1.0.0",
   "description": "Wake word detection for 'hey claude' to open WSL terminals",
   "main": "dist/main/main.js",

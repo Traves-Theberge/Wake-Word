@@ -1,4 +1,4 @@
-# Claude Wake Word Detector
+# Wake Word Detector
 
 A highly configurable voice-activated wake word detection application that listens for "Hey Claude" and executes customizable commands, including opening terminals, launching applications, or running complex workflows.
 
