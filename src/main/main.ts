@@ -11,6 +11,16 @@ if (process.env.NODE_ENV === 'development') {
   process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 }
 
+// Disable hardware acceleration to prevent GPU process crashes
+app.disableHardwareAcceleration()
+
+// Additional GPU stability flags
+app.commandLine.appendSwitch('disable-gpu-sandbox')
+app.commandLine.appendSwitch('disable-software-rasterizer')
+app.commandLine.appendSwitch('disable-background-timer-throttling')
+app.commandLine.appendSwitch('disable-backgrounding-occluded-windows')
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
+
 // Keep a global reference of the window object
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
@@ -353,9 +363,17 @@ function createWindow(): void {
       allowRunningInsecureContent: false,
       experimentalFeatures: false,
     },
-    icon: isPackaged 
-      ? join(process.resourcesPath, 'assets/app_small.ico')
-      : join(__dirname, '../../assets/app_small.ico'),
+    icon: (() => {
+      const iconPath = isPackaged 
+        ? join(process.resourcesPath, 'assets/app_small.ico')
+        : join(__dirname, '../../assets/app_small.ico')
+      
+      if (!existsSync(iconPath)) {
+        console.warn(`⚠️ Warning: Window icon not found at: ${iconPath}`)
+      }
+      
+      return iconPath
+    })(),
     frame: false, // Remove default title bar
     titleBarStyle: 'hidden',
     show: false, // Don't show immediately
@@ -430,19 +448,77 @@ function createTrayIcons() {
     ? join(process.resourcesPath, 'assets')
     : join(__dirname, '../../assets')
   
-  return {
+  const iconPaths = {
     listening: join(basePath, 'Green.ico'),
     stopped: join(basePath, 'Red.ico')
   }
+  
+  // Validate that icon files exist
+  Object.entries(iconPaths).forEach(([state, iconPath]) => {
+    if (!existsSync(iconPath)) {
+      console.warn(`⚠️ Warning: Tray icon for ${state} state not found at: ${iconPath}`)
+    }
+  })
+  
+  return iconPaths
 }
 
 const trayIcons = createTrayIcons()
+
+// Icon verification function
+function verifyIconAssets(): boolean {
+  console.log('🔍 Verifying icon assets...')
+  
+  const requiredIcons = [
+    {
+      name: 'Window Icon',
+      path: isPackaged 
+        ? join(process.resourcesPath, 'assets/app_small.ico')
+        : join(__dirname, '../../assets/app_small.ico')
+    },
+    {
+      name: 'Tray Listening Icon',
+      path: trayIcons.listening
+    },
+    {
+      name: 'Tray Stopped Icon', 
+      path: trayIcons.stopped
+    }
+  ]
+  
+  let allIconsValid = true
+  
+  requiredIcons.forEach(({ name, path }) => {
+    if (existsSync(path)) {
+      console.log(`✅ ${name}: ${path}`)
+    } else {
+      console.error(`❌ ${name} MISSING: ${path}`)
+      allIconsValid = false
+    }
+  })
+  
+  if (allIconsValid) {
+    console.log('✅ All icon assets verified successfully')
+  } else {
+    console.error('❌ Some icon assets are missing - application may not display correctly')
+  }
+  
+  return allIconsValid
+}
 
 function updateTrayIcon(): void {
   if (!tray) return
   
   const iconPath = detector.isListening ? trayIcons.listening : trayIcons.stopped
-  tray.setImage(iconPath)
+  
+  // Verify icon file exists before setting
+  if (existsSync(iconPath)) {
+    tray.setImage(iconPath)
+  } else {
+    console.error(`❌ Tray icon not found: ${iconPath}`)
+    // Use a fallback or create a simple icon programmatically
+  }
+  
   tray.setToolTip(`Wake Word Detector - ${detector.isListening ? 'Listening' : 'Stopped'}`)
   
   // Update menu
@@ -523,6 +599,9 @@ function createTray(): void {
 
 // App event handlers
 app.whenReady().then(async () => {
+  // Verify icon assets before creating tray
+  verifyIconAssets()
+  
   createTray()
   
   // Auto-start listening on app launch
