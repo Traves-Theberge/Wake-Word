@@ -362,6 +362,8 @@ function createWindow(): void {
       webSecurity: true,
       allowRunningInsecureContent: false,
       experimentalFeatures: false,
+      backgroundThrottling: false, // Prevent background throttling
+      offscreen: false,
     },
     icon: (() => {
       const iconPath = isPackaged 
@@ -384,6 +386,8 @@ function createWindow(): void {
     transparent: true, // Make window transparent
     backgroundColor: '#00000000', // Transparent background
     roundedCorners: true,
+    // Fix for background flickering issues
+    paintWhenInitiallyHidden: false,
   })
 
   // Set Content Security Policy - only in production
@@ -433,6 +437,36 @@ function createWindow(): void {
   // Handle window closed
   mainWindow.on('closed', () => {
     mainWindow = null
+  })
+
+  // Prevent black background flickering when minimizing/restoring
+  mainWindow.on('minimize', () => {
+    // Prevent background issues during minimize
+    if (mainWindow) {
+      mainWindow.setSkipTaskbar(false)
+    }
+  })
+
+  mainWindow.on('restore', () => {
+    // Ensure proper restoration
+    if (mainWindow) {
+      mainWindow.setSkipTaskbar(false)
+      mainWindow.focus()
+    }
+  })
+
+  mainWindow.on('show', () => {
+    // Ensure background is properly rendered when showing
+    if (mainWindow) {
+      mainWindow.focus()
+    }
+  })
+
+  mainWindow.on('hide', () => {
+    // Clean up when hiding
+    if (mainWindow) {
+      mainWindow.setSkipTaskbar(true)
+    }
   })
 
   // Handle external links

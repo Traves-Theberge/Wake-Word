@@ -6,6 +6,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* Prevent text selection globally */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /* Force custom styles to override Tailwind */
@@ -23,6 +28,17 @@ html, body {
   color: #ffffff;
   margin: 0;
   padding: 0;
+  /* Prevent white flashing during window transitions */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /* Improve rendering performance */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Prevent text selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 /* Container styles */
@@ -38,6 +54,12 @@ html, body {
   margin: 0;
   box-sizing: border-box;
   overflow: hidden;
+  /* Prevent background flickering */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /* Improve rendering performance */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .te-container {
@@ -115,6 +137,11 @@ html, body {
   font-size: 1rem !important;
   transition: all 0.2s !important;
   outline: none !important;
+  /* Allow text selection in input fields */
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
 }
 
 .te-input::placeholder {
