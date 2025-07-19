@@ -29,13 +29,13 @@
 
 ### Option 1: One-Click Installation *(Recommended)*
 
-[![Download Installer](https://img.shields.io/badge/Download-Wake%20Word%20Detector%20Setup-orange?style=for-the-badge&logo=windows)](https://github.com/Traves-Theberge/Wakeword/releases/latest)
+[![Download Installer](https://img.shields.io/badge/Download-Wake%20Word%20Detector%20Setup-orange?style=for-the-badge&logo=windows)](https://github.com/Traves-Theberge/Wakeword/releases/tag/v1.0.0b)
 
 **Just download, install, and start talking!**
 
 </div>
 
-1. **🔽 Download** `Wake-Word-Detector-Setup.exe` from releases
+1. **🔽 Download** `Wake-Word-Detector-Setup.exe` from [v1.0.0b release](https://github.com/Traves-Theberge/Wakeword/releases/tag/v1.0.0b)
 2. **🛡️ Run as Administrator** and follow the setup wizard  
 3. **🔑 Configure** your [Picovoice API key](https://console.picovoice.ai/) (free tier available)
 4. **🎤 Say "Hey Claude"** and watch the magic happen!
@@ -529,7 +529,7 @@ Have an idea? We'd love to hear it! Open a [feature request](https://github.com/
 
 ### **Download Wake Word Detector Today**
 
-[![Download Latest Release](https://img.shields.io/badge/⬇️_DOWNLOAD-LATEST_RELEASE-orange?style=for-the-badge&logoColor=white)](https://github.com/Traves-Theberge/Wakeword/releases/latest)
+[![Download Latest Release](https://img.shields.io/badge/⬇️_DOWNLOAD-v1.0.0b_RELEASE-orange?style=for-the-badge&logoColor=white)](https://github.com/Traves-Theberge/Wakeword/releases/tag/v1.0.0b)
 
 *Join developers worldwide who are using voice commands to boost their productivity*
 
