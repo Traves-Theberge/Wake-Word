@@ -12,7 +12,7 @@
     "build:renderer": "vite build",
     "build:main": "tsc -p tsconfig.main.json",
     "dist": "npm run build-packager && npm run post-build",
-    "build-packager": "npm run build && electron-packager . \"Wake Word Detector\" --platform=win32 --arch=x64 --out=release --overwrite --app-copyright=\"Copyright (C) 2025 Traves Theberge\" --app-version=\"1.0.0\" --executable-name=\"Claude-Wake-Word-Detector\" --icon=\"assets/Install.ico\"",
+    "build-packager": "npm run build && electron-packager . \"Wake Word Detector\" --platform=win32 --arch=x64 --out=release --overwrite --app-copyright=\"Copyright (C) 2025 Traves Theberge\" --app-version=\"1.0.0\" --executable-name=\"Wake-Word-Detector\" --icon=\"assets/app.ico\"",
     "post-build": "echo. && echo ✅ Build completed! && echo. && echo 🚀 Next steps: && echo   1. Run scripts\\Install-Shortcuts.bat to create desktop and start menu shortcuts && echo   2. Launch the application from the shortcuts or directly from release folder && echo   3. Configure your Picovoice API key in Settings && echo.",
     "clean": "if exist dist rmdir /s /q dist && if exist release rmdir /s /q release",
     "clean:dist": "if exist dist rmdir /s /q dist",
@@ -24,7 +24,9 @@
     "installer:full": "scripts\\build-installer.ps1 -InstallNSIS -BuildInstaller",
     "installer:nsis": "scripts\\build-installer.ps1 -InstallNSIS",
     "shortcuts:install": "scripts\\Install-Shortcuts.bat",
-    "shortcuts:uninstall": "scripts\\Uninstall-Shortcuts.bat"
+    "shortcuts:uninstall": "scripts\\Uninstall-Shortcuts.bat",
+    "installer:build": "build-installer.bat",
+    "installer:quick": "npm run dist && build-installer.bat"
   },
   "keywords": [
     "wake-word",

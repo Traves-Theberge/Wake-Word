@@ -16,23 +16,25 @@ export function SettingsPanel({}: SettingsPanelProps) {
   const [isListening, setIsListening] = useState(false)
   const [isToggling, setIsToggling] = useState(false)
   const [showApiKey, setShowApiKey] = useState(false)
-  const [testButtonState, setTestButtonState] = useState<'normal' | 'success' | 'error'>('normal')
-  const [saveButtonState, setSaveButtonState] = useState<'normal' | 'success' | 'error'>('normal')
+  const [buttonStates, setButtonStates] = useState<{
+    test: 'normal' | 'success' | 'error'
+    save: 'normal' | 'success' | 'error'
+  }>({ test: 'normal', save: 'normal' })
 
 
   const handleSaveConfig = async () => {
-    setSaveButtonState('normal')
+    setButtonStates(prev => ({ ...prev, save: 'normal' }))
     try {
       const result = await saveConfig({ 
         apiKey: config.apiKey,
         enableCursor: config.enableCursor,
         enableClaude: config.enableClaude 
       })
-      setSaveButtonState(result.success ? 'success' : 'error')
-      setTimeout(() => setSaveButtonState('normal'), 2000)
+      setButtonStates(prev => ({ ...prev, save: result.success ? 'success' : 'error' }))
+      setTimeout(() => setButtonStates(prev => ({ ...prev, save: 'normal' })), 2000)
     } catch (error) {
-      setSaveButtonState('error')
-      setTimeout(() => setSaveButtonState('normal'), 2000)
+      setButtonStates(prev => ({ ...prev, save: 'error' }))
+      setTimeout(() => setButtonStates(prev => ({ ...prev, save: 'normal' })), 2000)
     }
   }
 
@@ -41,14 +43,14 @@ export function SettingsPanel({}: SettingsPanelProps) {
       return
     }
 
-    setTestButtonState('normal')
+    setButtonStates(prev => ({ ...prev, test: 'normal' }))
     try {
       const result = await testConnection({ apiKey: config.apiKey })
-      setTestButtonState(result.success ? 'success' : 'error')
-      setTimeout(() => setTestButtonState('normal'), 2000)
+      setButtonStates(prev => ({ ...prev, test: result.success ? 'success' : 'error' }))
+      setTimeout(() => setButtonStates(prev => ({ ...prev, test: 'normal' })), 2000)
     } catch (error) {
-      setTestButtonState('error')
-      setTimeout(() => setTestButtonState('normal'), 2000)
+      setButtonStates(prev => ({ ...prev, test: 'error' }))
+      setTimeout(() => setButtonStates(prev => ({ ...prev, test: 'normal' })), 2000)
     }
   }
 
@@ -120,14 +122,12 @@ export function SettingsPanel({}: SettingsPanelProps) {
           <motion.button
             onClick={handleToggleListening}
             disabled={isToggling || !config.apiKey.trim()}
-            className="te-button te-button-primary mb-6 te-no-drag"
-            animate={{
-              backgroundColor: isListening ? '#dc2626' : '#ff6b35',
-            }}
-            whileHover={{
-              backgroundColor: isListening ? '#b91c1c' : '#e55a2b',
-            }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className={`te-button te-no-drag mb-6 ${
+              isListening ? 'te-button-stop' : 'te-button-start'
+            }`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
           >
             {isToggling ? (
               <>
@@ -256,26 +256,24 @@ export function SettingsPanel({}: SettingsPanelProps) {
             onClick={handleTestKey}
             disabled={isTestingConnection || !config.apiKey.trim()}
             className={`te-button te-button-secondary flex-1 max-w-xs te-no-drag ${
-              testButtonState === 'success' ? 'bg-green-600 text-white' : 
-              testButtonState === 'error' ? 'bg-red-600 text-white' : ''
+              buttonStates.test === 'success' ? 'te-button-success' : 
+              buttonStates.test === 'error' ? 'te-button-error' : ''
             }`}
-            animate={{
-              backgroundColor: testButtonState === 'success' ? '#16a34a' : 
-                             testButtonState === 'error' ? '#dc2626' : undefined,
-            }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
           >
             {isTestingConnection ? (
               <>
                 <div className="te-spinner w-4 h-4 mr-2" />
                 Testing...
               </>
-            ) : testButtonState === 'success' ? (
+            ) : buttonStates.test === 'success' ? (
               <>
                 <span className="mr-2">✅</span>
                 Valid
               </>
-            ) : testButtonState === 'error' ? (
+            ) : buttonStates.test === 'error' ? (
               <>
                 <span className="mr-2">❌</span>
                 Invalid
@@ -289,26 +287,24 @@ export function SettingsPanel({}: SettingsPanelProps) {
             onClick={handleSaveConfig}
             disabled={!config.apiKey.trim() || isSaving}
             className={`te-button te-button-primary flex-1 max-w-xs te-no-drag ${
-              saveButtonState === 'success' ? 'bg-green-600' : 
-              saveButtonState === 'error' ? 'bg-red-600' : ''
+              buttonStates.save === 'success' ? 'te-button-success' : 
+              buttonStates.save === 'error' ? 'te-button-error' : ''
             }`}
-            animate={{
-              backgroundColor: saveButtonState === 'success' ? '#16a34a' : 
-                             saveButtonState === 'error' ? '#dc2626' : undefined,
-            }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
           >
             {isSaving ? (
               <>
                 <div className="te-spinner w-4 h-4 mr-2" />
                 Saving...
               </>
-            ) : saveButtonState === 'success' ? (
+            ) : buttonStates.save === 'success' ? (
               <>
                 <span className="mr-2">✅</span>
                 Saved
               </>
-            ) : saveButtonState === 'error' ? (
+            ) : buttonStates.save === 'error' ? (
               <>
                 <span className="mr-2">❌</span>
                 Failed

@@ -126,6 +126,34 @@ html, body {
   background: linear-gradient(135deg, #404040 0%, #343434 100%) !important;
 }
 
+.te-button-success {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%) !important;
+  color: white !important;
+}
+
+.te-button-error {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%) !important;
+  color: white !important;
+}
+
+.te-button-start {
+  background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%) !important;
+  color: white !important;
+}
+
+.te-button-start:hover {
+  background: linear-gradient(135deg, #e55a2b 0%, #cc4f24 100%) !important;
+}
+
+.te-button-stop {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  color: white !important;
+}
+
+.te-button-stop:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
+}
+
 /* Input styles */
 .te-input {
   width: 100% !important;

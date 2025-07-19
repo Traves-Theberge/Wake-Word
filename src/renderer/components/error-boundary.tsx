@@ -30,28 +30,28 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-zinc-900 text-white flex items-center justify-center p-6">
-          <div className="glass-card p-8 max-w-md w-full text-center">
+        <div className="min-h-screen bg-transparent flex items-center justify-center p-6">
+          <div className="te-card text-center">
             <div className="text-6xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-bold text-accent mb-4">
+            <h2 className="text-2xl font-bold text-te-orange mb-4">
               Something went wrong
             </h2>
-            <p className="text-zinc-400 mb-6">
+            <p className="text-te-muted mb-6">
               An unexpected error occurred in the wake word detector.
             </p>
             {this.state.error && (
               <details className="mb-6 text-left">
-                <summary className="cursor-pointer text-accent mb-2">
+                <summary className="cursor-pointer text-te-orange mb-2">
                   Error Details
                 </summary>
-                <pre className="text-xs bg-zinc-800 p-3 rounded overflow-auto">
+                <pre className="text-xs bg-te-surface p-3 rounded overflow-auto border border-te-border">
                   {this.state.error.message}
                 </pre>
               </details>
             )}
             <button
               onClick={this.handleReset}
-              className="btn-primary"
+              className="te-button te-button-primary"
             >
               Try Again
             </button>

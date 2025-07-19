@@ -11,6 +11,17 @@ if (process.env.NODE_ENV === 'development') {
   process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 }
 
+// Set application name for Task Manager and system
+app.setName('Wake Word Detector')
+
+// Set process title for Task Manager
+process.title = 'Wake Word Detector'
+
+// Set app user model ID for Windows taskbar grouping and identification
+if (process.platform === 'win32') {
+  app.setAppUserModelId('com.travestheberge.wakeworddetector')
+}
+
 // Disable hardware acceleration to prevent GPU process crashes
 app.disableHardwareAcceleration()
 
@@ -24,9 +35,11 @@ app.commandLine.appendSwitch('disable-renderer-backgrounding')
 // Keep a global reference of the window object
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
+let isQuitting = false
 
 const isDev = process.env.NODE_ENV === 'development'
 const isPackaged = app.isPackaged
+const isStartupLaunch = process.argv.includes('--startup')
 
 interface Config {
   picovoiceAccessKey?: string
@@ -64,11 +77,25 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
 
     try {
       // Initialize Porcupine with the Hey Claude keyword
-      const keywordPath = isPackaged 
-        ? join(process.resourcesPath, 'keywords/hey-claude.ppn')
-        : join(__dirname, '../../keywords/hey-claude.ppn')
+      let keywordPath: string
+      
+      if (isPackaged) {
+        // Try multiple possible locations for packaged app
+        const possiblePaths = [
+          join(process.resourcesPath, 'keywords/hey-claude.ppn'), // electron-packager
+          join(__dirname, '../../keywords/hey-claude.ppn'), // relative from main process
+          join(process.cwd(), 'keywords/hey-claude.ppn'), // current working directory
+          join(process.execPath, '../keywords/hey-claude.ppn'), // relative to executable
+          join(process.execPath, '../../keywords/hey-claude.ppn'), // one level up from executable
+        ]
+        
+        keywordPath = possiblePaths.find(path => existsSync(path)) || possiblePaths[0]
+      } else {
+        keywordPath = join(__dirname, '../../keywords/hey-claude.ppn')
+      }
+      
       if (!existsSync(keywordPath)) {
-        throw new Error('Hey Claude keyword file not found')
+        throw new Error(`Hey Claude keyword file not found. Tried: ${keywordPath}`)
       }
 
       this.porcupine = new Porcupine(
@@ -322,6 +349,7 @@ function createWindow(): void {
     minHeight: 650,
     maxWidth: 850,
     maxHeight: 950,
+    title: 'Wake Word Detector - Settings',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -333,9 +361,22 @@ function createWindow(): void {
       offscreen: false,
     },
     icon: (() => {
-      const iconPath = isPackaged 
-        ? join(process.resourcesPath, 'assets/app_small.ico')
-        : join(__dirname, '../../assets/app_small.ico')
+      let iconPath: string
+      
+      if (isPackaged) {
+        // Try multiple possible locations for packaged app
+        const possiblePaths = [
+          join(process.resourcesPath, 'assets/app_small.ico'), // electron-packager
+          join(__dirname, '../../assets/app_small.ico'), // relative from main process
+          join(process.cwd(), 'assets/app_small.ico'), // current working directory
+          join(process.execPath, '../assets/app_small.ico'), // relative to executable
+          join(process.execPath, '../../assets/app_small.ico'), // one level up from executable
+        ]
+        
+        iconPath = possiblePaths.find(path => existsSync(path)) || possiblePaths[0]
+      } else {
+        iconPath = join(__dirname, '../../assets/app_small.ico')
+      }
       
       if (!existsSync(iconPath)) {
         console.warn(`⚠️ Warning: Window icon not found at: ${iconPath}`)
@@ -396,8 +437,10 @@ function createWindow(): void {
 
   // Handle window closed - don't quit app, just hide to tray
   mainWindow.on('close', (event) => {
-    event.preventDefault()
-    mainWindow?.hide()
+    if (!isQuitting) {
+      event.preventDefault()
+      mainWindow?.hide()
+    }
   })
   
   // Handle window closed
@@ -444,9 +487,25 @@ function createWindow(): void {
 
 // Create tray icons for different states
 function createTrayIcons() {
-  const basePath = isPackaged 
-    ? join(process.resourcesPath, 'assets')
-    : join(__dirname, '../../assets')
+  let basePath: string
+  
+  if (isPackaged) {
+    // Try multiple possible locations for packaged app
+    const possibleBasePaths = [
+      join(process.resourcesPath, 'assets'), // electron-packager
+      join(__dirname, '../../assets'), // relative from main process
+      join(process.cwd(), 'assets'), // current working directory
+      join(process.execPath, '../assets'), // relative to executable
+      join(process.execPath, '../../assets'), // one level up from executable
+    ]
+    
+    basePath = possibleBasePaths.find(path => {
+      const testFile = join(path, 'Green.ico')
+      return existsSync(testFile)
+    }) || possibleBasePaths[0]
+  } else {
+    basePath = join(__dirname, '../../assets')
+  }
   
   const iconPaths = {
     listening: join(basePath, 'Green.ico'),
@@ -467,12 +526,25 @@ const trayIcons = createTrayIcons()
 
 // Icon verification function
 function verifyIconAssets(): boolean {
+  let windowIconPath: string
+  
+  if (isPackaged) {
+    const possiblePaths = [
+      join(process.resourcesPath, 'assets/app_small.ico'),
+      join(__dirname, '../../assets/app_small.ico'),
+      join(process.cwd(), 'assets/app_small.ico'),
+      join(process.execPath, '../assets/app_small.ico'),
+      join(process.execPath, '../../assets/app_small.ico'),
+    ]
+    windowIconPath = possiblePaths.find(path => existsSync(path)) || possiblePaths[0]
+  } else {
+    windowIconPath = join(__dirname, '../../assets/app_small.ico')
+  }
+  
   const requiredIcons = [
     {
       name: 'Window Icon',
-      path: isPackaged 
-        ? join(process.resourcesPath, 'assets/app_small.ico')
-        : join(__dirname, '../../assets/app_small.ico')
+      path: windowIconPath
     },
     {
       name: 'Tray Listening Icon',
@@ -490,6 +562,8 @@ function verifyIconAssets(): boolean {
     if (!existsSync(path)) {
       console.error(`❌ ${name} MISSING: ${path}`)
       allIconsValid = false
+    } else {
+      console.log(`✅ ${name} found: ${path}`)
     }
   })
   
@@ -560,7 +634,31 @@ function updateTrayMenu(): void {
     {
       label: 'Quit',
       type: 'normal',
-      click: () => {
+      click: async () => {
+        isQuitting = true
+        
+        // Stop wake word detection first
+        try {
+          if (detector.isListening) {
+            await detector.stop()
+          }
+        } catch (error) {
+          console.error('Error stopping detector during quit:', error)
+        }
+        
+        // Close all windows
+        if (mainWindow) {
+          mainWindow.destroy()
+          mainWindow = null
+        }
+        
+        // Destroy tray
+        if (tray) {
+          tray.destroy()
+          tray = null
+        }
+        
+        // Force quit the application
         app.quit()
       }
     }
@@ -589,8 +687,19 @@ function createTray(): void {
 
 // App event handlers
 app.whenReady().then(async () => {
+  // Debug: Log environment information
+  console.log('🔍 Environment Debug Info:')
+  console.log('  isDev:', isDev)
+  console.log('  isPackaged:', isPackaged)
+  console.log('  __dirname:', __dirname)
+  console.log('  process.cwd():', process.cwd())
+  console.log('  process.execPath:', process.execPath)
+  console.log('  process.resourcesPath:', process.resourcesPath)
+  console.log('  app.getAppPath():', app.getAppPath())
+  
   // Verify icon assets before creating tray
-  verifyIconAssets()
+  const iconsValid = verifyIconAssets()
+  console.log('🎨 Icons validation result:', iconsValid)
   
   createTray()
   
@@ -599,6 +708,12 @@ app.whenReady().then(async () => {
     await detector.start()
   } catch (error) {
     console.error('Could not auto-start listening:', error)
+  }
+  
+  // Don't show window on startup launch (launched from Windows startup)
+  if (!isStartupLaunch) {
+    // Only create window if not launched from startup
+    // User can access via tray icon
   }
   
   // Create window if no other windows are open (macOS)
@@ -611,8 +726,9 @@ app.whenReady().then(async () => {
 
 // Quit when all windows are closed (except on macOS)
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    // Don't quit, just hide to tray
+  // Allow quitting on all platforms when tray quit is used
+  if (process.platform !== 'darwin' || isQuitting) {
+    app.quit()
   }
 })
 
@@ -671,9 +787,21 @@ ipcMain.handle('test-api-key', async (_, apiKey: string): Promise<{ success: boo
 
 ipcMain.handle('test-keyword', async (): Promise<{ exists: boolean; path?: string }> => {
   try {
-    const keywordPath = isPackaged 
-      ? join(process.resourcesPath, 'keywords/hey-claude.ppn')
-      : join(__dirname, '../../keywords/hey-claude.ppn')
+    let keywordPath: string
+    
+    if (isPackaged) {
+      const possiblePaths = [
+        join(process.resourcesPath, 'keywords/hey-claude.ppn'),
+        join(__dirname, '../../keywords/hey-claude.ppn'),
+        join(process.cwd(), 'keywords/hey-claude.ppn'),
+        join(process.execPath, '../keywords/hey-claude.ppn'),
+        join(process.execPath, '../../keywords/hey-claude.ppn'),
+      ]
+      keywordPath = possiblePaths.find(path => existsSync(path)) || possiblePaths[0]
+    } else {
+      keywordPath = join(__dirname, '../../keywords/hey-claude.ppn')
+    }
+    
     const exists = existsSync(keywordPath)
     
     return { exists, path: exists ? keywordPath : undefined }
@@ -751,17 +879,31 @@ ipcMain.handle('window-maximize', async () => {
 })
 
 // Handle app closing
-app.on('before-quit', async () => {
-  if (detector.isListening) {
-    await detector.stop()
+app.on('before-quit', async (event) => {
+  if (!isQuitting) {
+    // Only prevent quit if not intentionally quitting
+    event.preventDefault()
+    return
+  }
+  
+  // Clean shutdown when intentionally quitting
+  try {
+    if (detector.isListening) {
+      await detector.stop()
+    }
+  } catch (error) {
+    console.error('Error during shutdown cleanup:', error)
   }
 })
 
-// Handle app quit
-app.on('will-quit', async (event) => {
-  if (detector.isListening) {
+// Handle app quit - final cleanup
+app.on('will-quit', (event) => {
+  if (!isQuitting) {
+    // Prevent accidental quit, hide to tray instead
     event.preventDefault()
-    await detector.stop()
-    app.quit()
+    if (mainWindow) {
+      mainWindow.hide()
+    }
   }
+  // If isQuitting is true, allow normal quit process
 }) 

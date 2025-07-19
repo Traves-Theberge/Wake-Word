@@ -1,56 +1,108 @@
 # Wake Word Detector
 
-A  Electron-based wake word detection application that listens for "Hey Claude" voice commands to automatically launch Cursor IDE and Claude CLI in Windows. Features an intuitive React interface with system tray integration for seamless background operation.
+🎤 A professional Electron-based wake word detection application that listens for "Hey Claude" voice commands to automatically launch Cursor IDE and Claude CLI. Features a modern React interface, Windows installer, and seamless system tray integration.
 
-## 🚀 Features
+**Powered by [Picovoice](https://picovoice.ai/) - Industry-leading on-device voice AI** 🔊
 
-- **Voice-Activated Commands**: Responds to "Hey Claude" wake word using Picovoice technology
-- **Dual Command Support**: Automatically opens both Cursor IDE and Claude CLI in WSL
-- **System Tray Integration**: Operates quietly in background with visual status indicators
-- **Configurable Settings**: Easy-to-use settings panel for customization
-- **Modern UI**: Beautiful React interface with Tailwind CSS and Framer Motion animations
-- **Windows Native**: Optimized for Windows 10/11 with proper executable packaging
-- **Background Operation**: Runs silently without blocking user workflow
+## ✨ Features
 
-## 🎯 Use Cases
+### 🎯 **Voice Control**
+- **"Hey Claude" Detection**: Advanced wake word recognition using Picovoice Porcupine
+- **Dual Launch Support**: Configurable launching of Cursor IDE and/or Claude CLI
+- **High Accuracy**: On-device processing for reliable, private voice detection
+- **Customizable Sensitivity**: Adjustable detection thresholds
 
-- **Developers**: Quick access to Claude AI assistance while coding
-- **Voice Commands**: Hands-free activation of development tools
-- **Workflow Optimization**: Seamless integration into development workflow
-- **Accessibility**: Voice-controlled IDE and AI assistant access
+### 🖥️ **Windows Integration**
+- **Professional Installer**: Complete NSIS-based installer with shortcuts
+- **System Tray**: Visual status indicators (Green=Listening, Red=Stopped)
+- **Startup Integration**: Optional auto-start with Windows
+- **Task Manager Branding**: Proper application identification and icons
+
+### 🎨 **Modern Interface**
+- **React UI**: Beautiful settings panel with Tailwind CSS styling
+- **Framer Motion**: Smooth animations and transitions
+- **Custom Window**: Frameless design with rounded corners
+- **Real-time Status**: Live listening state updates
+
+### ⚡ **Performance**
+- **Background Operation**: Minimal resource usage while listening
+- **Instant Response**: Fast command execution and application launching
+- **Stable Detection**: Robust audio processing with error handling
+
+## 🚀 Quick Start
+
+### **Option 1: Use the Installer (Recommended)**
+1. Download `Wake-Word-Detector-Setup.exe`
+2. Run the installer and follow the setup wizard
+3. Configure your Picovoice API key in settings
+4. Start saying "Hey Claude"!
+
+### **Option 2: Build from Source**
+```bash
+# Clone and install
+git clone https://github.com/Traves-Theberge/Wakeword.git
+cd Wakeword
+npm install
+
+# Build and package
+npm run dist
+
+# Create installer
+npm run installer:quick
+```
+
+## 🔧 Requirements
+
+- **OS**: Windows 10/11 (64-bit)
+- **Picovoice API Key**: [Get free key](https://console.picovoice.ai/)
+- **Microphone**: Any Windows-compatible microphone
+- **Storage**: ~150 MB for installation
+
+## 📦 Installation Options
+
+### **Desktop Integration**
+- ✅ Desktop shortcut
+- ✅ Start Menu folder  
+- ✅ System tray integration
+- ✅ Startup with Windows (optional)
+
+### **Command Launch Options**
+- ✅ **Cursor IDE**: Launches your code editor
+- ✅ **Claude CLI**: Opens WSL terminal with Claude
+- ✅ **Configurable**: Enable/disable either command
 
 ## 🏗️ Architecture
 
-**Technology Stack:**
-- **Framework**: Electron 27.3.11 with TypeScript
-- **Frontend**: React 18 with Tailwind CSS 4.1.11
-- **Wake Word**: Picovoice Porcupine SDK
-- **Build System**: Vite 7.0.3 for renderer, TypeScript for main process
-- **Animations**: Framer Motion for smooth UI transitions
+### **Technology Stack**
+- **Core**: Electron 27.3.11 + TypeScript
+- **Frontend**: React 18 + Tailwind CSS 4.1
+- **Voice Engine**: [Picovoice Porcupine](https://picovoice.ai/platform/porcupine/) SDK
+- **Build System**: Vite 7.0 + electron-packager
+- **Installer**: NSIS (Nullsoft Scriptable Install System)
 
-**Project Structure:**
+### **Project Structure**
 ```
 src/
 ├── main/                    # Electron main process
-│   ├── main.ts             # Core application logic
-│   └── preload.ts          # Secure context bridge
+│   ├── main.ts             # Core app logic + wake word detection
+│   └── preload.ts          # Secure IPC bridge
 ├── renderer/               # React frontend
-│   ├── App.tsx             # Main application component
-│   ├── main.tsx            # React entry point
+│   ├── App.tsx             # Main application
 │   ├── components/         # UI components
-│   │   ├── settings-panel.tsx
-│   │   ├── custom-header.tsx
-│   │   ├── loading-spinner.tsx
-│   │   └── error-boundary.tsx
+│   │   ├── settings-panel.tsx      # Configuration interface
+│   │   ├── custom-header.tsx       # Window controls
+│   │   ├── animated-background.tsx # Visual effects
+│   │   └── loading-spinner.tsx     # Loading states
 │   └── hooks/              # React hooks
-│       └── use-wake-word-config.ts
-keywords/                   # Wake word models
-├── hey-claude.ppn         # Picovoice keyword file
-└── LICENSE.txt
+│       └── use-wake-word-config.ts # Settings management
+keywords/
+├── hey-claude.ppn         # Picovoice wake word model
+└── LICENSE.txt            # Picovoice license
 assets/                     # Application icons
 ├── app.ico                # Main application icon
-├── Green.ico              # Listening status
-└── Red.ico                # Stopped status
+├── Green.ico              # Tray listening state
+└── Red.ico                # Tray stopped state
+installer.nsi              # NSIS installer script
 ```
 
 ## 📋 Prerequisites
@@ -247,10 +299,29 @@ This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.t
 
 ## 🙏 Acknowledgments
 
-- **Picovoice** for wake word detection technology
-- **Electron** for cross-platform desktop framework
-- **React** for modern UI development
-- **Tailwind CSS** for styling system
+### **Special Thanks to Picovoice** 🎤
+This project is powered by **[Picovoice](https://picovoice.ai/)** - the leading platform for on-device voice AI. Their incredible technology makes private, reliable wake word detection possible.
+
+- **[Porcupine Wake Word Engine](https://picovoice.ai/platform/porcupine/)**: Industry-leading wake word detection
+- **On-Device Processing**: Privacy-first approach with no cloud dependency  
+- **High Accuracy**: Advanced audio processing for reliable voice recognition
+- **Developer-Friendly**: Excellent SDKs and documentation
+
+> *"Picovoice democratizes voice AI by making it accessible, private, and efficient."*
+
+### **Additional Credits**
+- **[Electron](https://electronjs.org/)**: Cross-platform desktop framework
+- **[React](https://react.dev/)**: Modern UI library for component-based development
+- **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first CSS framework
+- **[Framer Motion](https://www.framer.com/motion/)**: Smooth animations and transitions
+- **[NSIS](https://nsis.sourceforge.io/)**: Professional Windows installer creation
+
+## 🔗 Useful Links
+
+- **[Get Picovoice API Key](https://console.picovoice.ai/)**: Free tier available
+- **[Picovoice Documentation](https://picovoice.ai/docs/)**: Comprehensive guides
+- **[Wake Word Training](https://console.picovoice.ai/ppn)**: Create custom keywords
+- **[Electron Documentation](https://electronjs.org/docs)**: Desktop app development
 
 ## 📞 Support
 
