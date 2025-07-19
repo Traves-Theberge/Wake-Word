@@ -204,8 +204,8 @@ Wake-Word-Detector/
 │   └── LICENSE.txt             # Picovoice licensing
 ├── 🖼️ assets/                   # Application resources
 │   ├── app.ico                 # Main application icon
-│   ├── Green.ico               # 🟢 Listening state indicator
-│   └── Red.ico                 # 🔴 Stopped state indicator
+│   ├── Green.ico               # Listening state indicator
+│   └── Red.ico                 # Stopped state indicator
 └── 📦 installer.nsi            # Professional Windows installer
 ```
 
@@ -473,21 +473,11 @@ Excellent SDKs, documentation, and support. Easy integration with any platform.
 
 ## 🤝 **Contributing & Support**
 
-<div align="center">
-
-### **Join the Community**
-
-[![Issues](https://img.shields.io/github/issues/Traves-Theberge/Wakeword?style=for-the-badge&color=red)](https://github.com/Traves-Theberge/Wakeword/issues)
-[![Pull Requests](https://img.shields.io/github/issues-pr/Traves-Theberge/Wakeword?style=for-the-badge&color=blue)](https://github.com/Traves-Theberge/Wakeword/pulls)
-[![Discussions](https://img.shields.io/badge/GitHub-Discussions-purple?style=for-the-badge&logo=github)](https://github.com/Traves-Theberge/Wakeword/discussions)
-
-</div>
-
 ### **🐛 Found a Bug?**
 1. **Check** existing [issues](https://github.com/Traves-Theberge/Wakeword/issues)
 2. **Create** a detailed bug report with:
    - Steps to reproduce
-   - Expected vs actual behavior
+   - Expected vs actual behaviour
    - System information
    - Console logs (if applicable)
 
@@ -513,10 +503,7 @@ Have an idea? We'd love to hear it! Open a [feature request](https://github.com/
 *See [LICENSE.txt](LICENSE.txt) for full details*
 
 ### **Third-Party Licenses**
-- **Picovoice**: See [keywords/LICENSE.txt](keywords/LICENSE.txt)
-- **Electron**: MIT License
-- **React**: MIT License
-
+**Picovoice**: See [keywords/LICENSE.txt](keywords/LICENSE.txt)
 </div>
 
 ---
@@ -536,9 +523,4 @@ Have an idea? We'd love to hear it! Open a [feature request](https://github.com/
 **Made with ❤️ by [Traves Theberge](https://github.com/Traves-Theberge)**
 
 *Powered by [Picovoice](https://picovoice.ai/) • Built with [Electron](https://electronjs.org/) • Styled with [React](https://react.dev/)*
-
-[![GitHub stars](https://img.shields.io/github/stars/Traves-Theberge/Wakeword?style=social)](https://github.com/Traves-Theberge/Wakeword/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Traves-Theberge/Wakeword?style=social)](https://github.com/Traves-Theberge/Wakeword/network/members)
-[![Follow](https://img.shields.io/github/followers/Traves-Theberge?style=social)](https://github.com/Traves-Theberge)
-
 </div>
