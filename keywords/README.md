@@ -1,86 +1,121 @@
-# Custom Keywords for Claude
+# Wake Word Models - Powered by Picovoice
 
-This folder is where you place your custom trained wake word files.
+🎤 This folder contains your custom-trained wake word files created with **[Picovoice](https://picovoice.ai/)** - the industry leader in on-device voice AI technology.
 
-## 🎯 Required Keyword
+## 🎯 Current Setup
 
-To use the custom Claude detector, you need:
+You have the **"Hey Claude"** wake word ready to use! ✅
 
-1. **hey-claude.ppn** - For "hey claude" wake word ✅ (You have this!)
+**Included Files:**
+- `hey-claude.ppn` - Your trained "Hey Claude" wake word model
+- `LICENSE.txt` - Picovoice licensing terms
 
-## 🔧 How to Train Additional Keywords
+## 🚀 How It Works
 
-### Step 1: Visit Picovoice Console
-Go to [https://console.picovoice.ai/ppn](https://console.picovoice.ai/ppn)
+Your wake word detection is powered by **[Picovoice Porcupine](https://picovoice.ai/platform/porcupine/)**:
+
+- **🔒 Private**: All processing happens on your device
+- **⚡ Fast**: Real-time detection with minimal latency  
+- **🎯 Accurate**: Advanced audio processing for reliable recognition
+- **� Efficient**: Optimized for continuous background operation
+
+## 🔧 Training Additional Keywords
+
+Want to add more wake words? Here's how:
+
+### Step 1: Access Picovoice Console
+Visit [https://console.picovoice.ai/ppn](https://console.picovoice.ai/ppn)
 
 ### Step 2: Create New Keywords
-1. Click "Create New Keyword"
-2. Enter the phrase exactly as you want to say it:
-   - **"hey claude"** ✅ (already done)
+1. Click **"Create New Keyword"**
+2. Enter your desired phrase (e.g., "Hey Gemini", "Computer")
+3. Choose your target platform: **Windows x64**
 
-### Step 3: Train the Keywords
-1. Record yourself saying the phrase multiple times
-2. Follow Picovoice's training guidelines for best results
-3. Use a quiet environment
-4. Speak clearly and consistently
+### Step 3: Train Your Model
+1. **Record Samples**: Say your phrase clearly 10-20 times
+2. **Vary Conditions**: Different volumes, speeds, backgrounds
+3. **Quality Tips**:
+   - Use the same microphone you'll use for detection
+   - Record in a quiet environment
+   - Speak naturally and consistently
+   - Avoid background noise
 
-### Step 4: Download and Place Files
-1. Download the generated `.ppn` files
-2. Rename them to:
-   - `hey-claude.ppn` ✅ (you have this)
-3. Place files in this `keywords/` folder
+### Step 4: Download & Install
+1. Download the generated `.ppn` file
+2. Rename it descriptively (e.g., `hey-gemini.ppn`)
+3. Place it in this `keywords/` folder
+4. Update your application configuration
 
-## 📁 Current File Structure
+## 📁 File Structure
 ```
 keywords/
-├── README.md           # This file
-├── hey-claude.ppn      # ✅ Your trained "hey claude" keyword
-└── LICENSE.txt         # Picovoice license
+├── README.md           # This documentation
+├── hey-claude.ppn      # ✅ Your "Hey Claude" model
+└── LICENSE.txt         # Picovoice license terms
 ```
 
-## 🚀 Usage
+## 🎤 Usage & Testing
 
-### Claude-Only (Current Setup)
-```bash
-# Run with your custom "hey claude" keyword
-npm run claude
-```
+### **Current Command**
+Say **"Hey Claude"** to trigger:
+- 🖥️ **Cursor IDE** launch (if enabled)
+- 🤖 **Claude CLI** in WSL terminal (if enabled)
 
-### Alternative Options
-```bash
-# Built-in keywords (computer=Claude, jarvis=Gemini)
-npm run ai:assistant
+### **Testing Tips**
+1. **Consistency**: Say "Hey Claude" the same way you trained it
+2. **Environment**: Use in similar conditions to training
+3. **Microphone**: Same device and distance as training
+4. **Clarity**: Speak clearly and at normal volume
+5. **Patience**: Allow ~1 second between attempts
 
-# Basic examples
-npm run example:basic
-```
+### **Troubleshooting Detection**
+- ❌ **Not detecting?** Try speaking closer to microphone
+- ❌ **False triggers?** Increase sensitivity in settings
+- ❌ **Too sensitive?** Decrease sensitivity or retrain with more samples
 
-## 💡 Tips for Better Detection
+## 💡 Pro Tips for Better Detection
 
-1. **Consistency**: Say "hey claude" the same way each time
-2. **Environment**: Use in a quiet room
-3. **Microphone**: Use the same microphone you trained with
-4. **Pronunciation**: Be clear and natural
-5. **Distance**: Stay at similar distance from microphone
+### **Training Best Practices**
+- **Multiple Sessions**: Train across different days/times
+- **Voice Variations**: Include different emotions/energy levels
+- **Background Variety**: Train with typical background sounds
+- **Microphone Consistency**: Use your actual recording device
 
-## 🎤 Testing Your Claude Keyword
+### **Optimal Performance**
+- **Quiet Environment**: Minimize background noise during use
+- **Consistent Distance**: Maintain similar distance from microphone
+- **Natural Speech**: Don't over-enunciate or speak robotically
+- **Regular Retraining**: Update model if your voice changes
 
-1. Make sure your `.env` file has your Picovoice access key
-2. Run: `npm run claude`
-3. Say "hey claude" - should open WSL terminal for Claude
-4. If detection is poor, consider retraining with more samples
+## 🔮 Future Expansion Ideas
 
-## 🔮 Future Expansion
+### **Multi-Assistant Setup**
+Train additional wake words for different AI assistants:
+- `hey-gemini.ppn` → Google Bard/Gemini
+- `hey-copilot.ppn` → GitHub Copilot Chat  
+- `computer.ppn` → General voice commands
 
-When you want to add Gemini later:
-1. Train "hey gemini" keyword at Picovoice Console
-2. Save as `hey-gemini.ppn` in this folder
-3. Use `npm run ai:custom` for both keywords
+### **Command-Specific Wake Words**
+Create specific triggers for different actions:
+- `open-cursor.ppn` → Launch IDE only
+- `start-claude.ppn` → Launch Claude CLI only
+- `voice-help.ppn` → Open application settings
 
-## 📞 Support
+## 🙏 Thanks to Picovoice
 
-If you have issues with keyword detection:
-- Check [Picovoice Documentation](https://picovoice.ai/docs/)
-- Ensure your microphone is working properly
-- Verify the .ppn file is in the correct location
-- Try retraining with more voice samples 
+This wake word detection is made possible by **[Picovoice](https://picovoice.ai/)**:
+
+> *"Picovoice's on-device voice AI platform enables private, accurate, and efficient wake word detection without compromising user privacy or requiring internet connectivity."*
+
+### **Why Picovoice?**
+- 🔒 **Privacy-First**: No audio data leaves your device
+- ⚡ **Real-Time**: Instant detection with minimal CPU usage
+- 🎯 **Accurate**: Industry-leading false positive/negative rates
+- 🛠️ **Developer-Friendly**: Easy integration with excellent documentation
+
+## 📞 Support & Resources
+
+- **[Picovoice Console](https://console.picovoice.ai/)**: Train and manage wake words
+- **[Porcupine Documentation](https://picovoice.ai/docs/porcupine/)**: Technical details
+- **[Community Support](https://github.com/Picovoice/porcupine/discussions)**: Get help from experts
+- **[Wake Word Best Practices](https://picovoice.ai/blog/)**: Tips and tutorials 
