@@ -83,12 +83,12 @@ function Install-NSIS {
         # Run installer silently
         Write-ColorOutput "Installing NSIS..." "Info"
         Start-Process -FilePath $installerPath -ArgumentList "/S" -Wait
-        
-        # Verify installation
+    
+    # Verify installation
         if (Test-NSISInstalled) {
             Write-ColorOutput "✅ NSIS installed successfully!" "Success"
-            return $true
-        } else {
+        return $true
+    } else {
             Write-ColorOutput "❌ NSIS installation failed!" "Error"
             return $false
         }
@@ -167,11 +167,11 @@ function Show-Success {
 }
 
 # Main execution
-if ($Help) {
-    Show-Help
-    exit 0
-}
-
+    if ($Help) {
+        Show-Help
+        exit 0
+    }
+    
 Show-Header
 
 # Check if any parameters were provided
@@ -183,25 +183,24 @@ if (-not $InstallNSIS -and -not $BuildInstaller) {
 $success = $true
 
 # Install NSIS if requested
-if ($InstallNSIS) {
+    if ($InstallNSIS) {
     if (-not (Test-NSISInstalled)) {
         $success = Install-NSIS
-    } else {
+        } else {
         Write-ColorOutput "ℹ️  NSIS is already installed, skipping installation." "Info"
+        }
     }
-}
-
+    
 # Build installer if requested
 if ($BuildInstaller -and $success) {
-    $success = Build-Installer
+        $success = Build-Installer
 }
 
 # Show success message
 if ($success) {
     Show-Success
     exit 0
-} else {
+        } else {
     Write-ColorOutput "❌ Setup failed. Check the errors above." "Error"
     exit 1
-} 
 } 

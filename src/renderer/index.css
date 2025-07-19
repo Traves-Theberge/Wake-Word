@@ -1,223 +1,351 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  * {
-    @apply border-te-border;
-  }
-  body {
-    @apply text-te-text font-sans;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: transparent !important;
-    margin: 0;
-    padding: 0;
-  }
-  html {
-    background: transparent !important;
-  }
+/* Reset and basic styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@layer components {
-  /* Claude-inspired dark theme design system - 30% larger */
-  .te-card {
-    @apply bg-te-surface border border-te-border rounded-3xl shadow-2xl;
-    background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
-    border: 1px solid #404040;
-    padding: 2.5rem; /* Reduced padding to prevent scrollbars */
-  }
-  
-  .te-button {
-    @apply inline-flex items-center justify-center rounded-2xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    padding: 1.3rem 2.6rem; /* 30% larger */
-    font-size: 1.3rem; /* 30% larger than 1rem */
-  }
-  
-  .te-button-primary {
-    @apply te-button bg-te-orange text-white hover:bg-te-orange-dark focus:ring-te-orange;
-    background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
-  }
-  
-  .te-button-secondary {
-    @apply te-button bg-te-surface text-te-text border border-te-border hover:bg-te-hover focus:ring-te-border;
-    background: linear-gradient(135deg, #3a3a3a 0%, #2e2e2e 100%);
-    border: 1px solid #505050;
-  }
-  
-  .te-input {
-    @apply w-full border border-te-border rounded-2xl text-te-text placeholder-te-muted focus:outline-none focus:ring-2 focus:ring-te-orange focus:border-transparent transition-all duration-200;
-    background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
-    border: 1px solid #404040;
-    padding: 1.3rem 1.95rem; /* 30% larger */
-    font-size: 1.3rem; /* 30% larger */
-  }
-  
-  .te-status-dot {
-    @apply w-3 h-3 rounded-full;
-  }
-  
-  .te-status-active {
-    @apply bg-te-green;
-    box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
-  }
-  
-  .te-status-inactive {
-    @apply bg-te-muted;
-  }
-  
-  .te-status-error {
-    @apply bg-te-red;
-    box-shadow: 0 0 12px rgba(244, 67, 54, 0.6);
-  }
-  
-  .te-header {
-    @apply text-center py-16;
-  }
-  
-  .te-title {
-    @apply text-5xl font-bold text-te-text mb-4;
-    background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .te-subtitle {
-    @apply text-te-muted text-xl font-medium;
-  }
-  
-  .te-section {
-    @apply mb-12;
-  }
-  
-  .te-section-title {
-    @apply text-2xl font-semibold text-te-text mb-6 flex items-center justify-center gap-4;
-  }
-  
-  .te-form-group {
-    @apply mb-12; /* 30% larger spacing */
-  }
-  
-  .te-label {
-    @apply block font-medium text-te-text text-center;
-    font-size: 1.43rem; /* 30% larger than 1.1rem */
-    margin-bottom: 1.3rem; /* 30% larger */
-  }
-  
-  .te-help-text {
-    @apply text-te-muted text-center;
-    font-size: 1.17rem; /* 30% larger than 0.9rem */
-    margin-top: 1.3rem; /* 30% larger */
-  }
-  
-  .te-error-text {
-    @apply text-te-red text-center;
-    font-size: 1.17rem; /* 30% larger than 0.9rem */
-    margin-top: 1.3rem; /* 30% larger */
-  }
-  
-  /* Status bar */
-  .te-status-bar {
-    @apply fixed top-0 left-0 right-0 z-50 bg-te-surface/95 backdrop-blur-sm border-b border-te-border;
-    background: rgba(26, 26, 26, 0.95);
-    border-bottom: 1px solid #404040;
-  }
-  
-  /* Animations */
-  .te-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  .te-pulse {
-    animation: pulse 2s ease-in-out infinite;
-  }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
-  
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-  }
-  
-  /* Loading spinner */
-  .te-spinner {
-    @apply w-6 h-6 border-2 border-te-muted border-t-te-orange rounded-full animate-spin;
-  }
-  
-  /* Success/Error messages - 30% larger */
-  .te-message {
-    @apply rounded-2xl text-center;
-    margin-top: 1.95rem; /* 30% larger */
-    padding: 1.95rem; /* 30% larger */
-    font-size: 1.3rem; /* 30% larger */
-  }
-  
-  .te-message-success {
-    @apply te-message bg-green-900/20 border border-green-700/30 text-green-300;
-  }
-  
-  .te-message-error {
-    @apply te-message bg-red-900/20 border border-red-700/30 text-red-300;
-  }
+/* Force custom styles to override Tailwind */
+.te-button,
+.te-button-primary,
+.te-button-secondary,
+.te-input {
+  all: unset;
+  box-sizing: border-box;
+}
 
-  /* Floating close button - positioned in top-right corner of container */
-  .te-floating-close-button {
-    @apply absolute top-4 right-4 z-50 flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #ffffff;
-    backdrop-filter: blur(8px);
-    -webkit-app-region: no-drag;
-  }
+html, body {
+  background: transparent !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
 
-  .te-floating-close-button:hover {
-    background: rgba(244, 67, 54, 0.2);
-    border-color: rgba(244, 67, 54, 0.5);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
-  }
+/* Container styles */
+.te-draggable-area {
+  -webkit-app-region: drag;
+  background: transparent;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
 
-  .te-floating-close-button:active {
-    transform: scale(0.95);
-  }
+.te-container {
+  position: relative;
+  width: fit-content;
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  -webkit-app-region: no-drag;
+}
 
-  /* Container for relative positioning */
-  .te-container {
-    @apply relative;
-    width: fit-content;
-    margin: 0;
-    max-width: 100%;
-    max-height: 100%;
-  }
+.te-no-drag {
+  -webkit-app-region: no-drag;
+}
 
-  /* Draggable area - transparent background */
-  .te-draggable-area {
-    -webkit-app-region: drag;
-    background: transparent;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    margin: 0;
-    box-sizing: border-box;
-    overflow: hidden;
-  }
+/* Card styles */
+.te-card {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
+  border: 1px solid #404040;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  width: 420px;
+  max-width: 100%;
+}
 
-  /* Interactive elements should not be draggable */
-  .te-no-drag {
-    -webkit-app-region: no-drag;
-  }
+/* Button styles */
+.te-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 12px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s !important;
+  outline: none !important;
+  cursor: pointer !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  font-size: 1rem !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
 
-  /* Make all interactive elements non-draggable */
-  .te-button, .te-input, a, button, input, textarea, select {
-    -webkit-app-region: no-drag;
-  }
+.te-button:disabled {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+}
+
+.te-button-primary {
+  background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%) !important;
+  color: white !important;
+}
+
+.te-button-primary:hover {
+  background: linear-gradient(135deg, #e55a2b 0%, #cc4f24 100%) !important;
+}
+
+.te-button-secondary {
+  background: linear-gradient(135deg, #3a3a3a 0%, #2e2e2e 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #505050 !important;
+}
+
+.te-button-secondary:hover {
+  background: linear-gradient(135deg, #404040 0%, #343434 100%) !important;
+}
+
+/* Input styles */
+.te-input {
+  width: 100% !important;
+  border: 1px solid #404040 !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%) !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  transition: all 0.2s !important;
+  outline: none !important;
+}
+
+.te-input::placeholder {
+  color: #888888 !important;
+}
+
+.te-input:focus {
+  border-color: #ff6b35 !important;
+  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.3) !important;
+}
+
+/* Text styles */
+.te-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.te-subtitle {
+  color: #888888;
+  font-size: 1.25rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.te-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.te-label {
+  display: block;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.te-help-text {
+  color: #888888;
+  text-align: center;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.te-error-text {
+  color: #f44336;
+  text-align: center;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+/* Form group styles */
+.te-form-group {
+  margin-bottom: 2rem;
+}
+
+.te-section {
+  margin-bottom: 2rem;
+}
+
+/* Header styles */
+.te-header {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+/* Status styles */
+.te-status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.te-status-active {
+  background-color: #4caf50;
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
+}
+
+.te-status-inactive {
+  background-color: #888888;
+}
+
+.te-status-error {
+  background-color: #f44336;
+  box-shadow: 0 0 12px rgba(244, 67, 54, 0.6);
+}
+
+/* Close button */
+.te-floating-close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.te-floating-close-button:hover {
+  background: rgba(244, 67, 54, 0.2);
+  border-color: rgba(244, 67, 54, 0.5);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+.te-floating-close-button:active {
+  transform: scale(0.95);
+}
+
+/* Loading spinner */
+.te-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #888888;
+  border-top: 2px solid #ff6b35;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Message styles */
+.te-message {
+  border-radius: 16px;
+  text-align: center;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.te-message-success {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #81c784;
+}
+
+.te-message-error {
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #e57373;
+}
+
+/* Animations */
+.te-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* All interactive elements should not be draggable */
+button, input, textarea, select, a {
+  -webkit-app-region: no-drag;
+}
+
+/* Custom checkbox styles */
+.te-checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.te-checkbox-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.te-checkbox {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+  border: 2px solid #505050;
+  background: #2a2a2a;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.te-checkbox.checked {
+  background: #ff6b35;
+  border-color: #ff6b35;
+}
+
+.te-checkbox-icon {
+  width: 1rem;
+  height: 1rem;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.te-checkbox.checked .te-checkbox-icon {
+  opacity: 1;
+}
+
+.te-checkbox-label {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #ffffff;
+  user-select: none;
 } 

@@ -412,8 +412,8 @@ function createWindow(): void {
   // Load the app
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000')
-    // Don't open dev tools automatically
-    // mainWindow.webContents.openDevTools()
+    // Open dev tools to debug UI issues
+    mainWindow.webContents.openDevTools()
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }

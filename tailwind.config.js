@@ -7,23 +7,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Claude-inspired dark theme color palette
-        'te-bg': '#1a1a1a',           // Dark background
-        'te-surface': '#2a2a2a',       // Dark surface
-        'te-text': '#ffffff',         // White text
-        'te-muted': '#888888',        // Muted grey
-        'te-border': '#404040',       // Dark border
-        'te-hover': '#333333',        // Hover state
-        'te-input': '#2a2a2a',        // Input background
-        
-        // Accent colors
-        'te-orange': '#ff6b35',       // Primary orange
-        'te-orange-dark': '#e55a2b',  // Darker orange
-        'te-green': '#4caf50',        // Success green
-        'te-blue': '#2196f3',         // Info blue
-        'te-purple': '#9c27b0',       // Accent purple
-        'te-red': '#f44336',          // Error red
-        'te-yellow': '#ffeb3b',       // Warning yellow
+        // Custom color system for the app
+        'te-bg': '#1a1a1a',
+        'te-surface': '#2a2a2a',
+        'te-text': '#ffffff',
+        'te-muted': '#888888',
+        'te-border': '#404040',
+        'te-hover': '#333333',
+        'te-input': '#2a2a2a',
+        'te-orange': '#ff6b35',
+        'te-orange-dark': '#e55a2b',
+        'te-green': '#4caf50',
+        'te-blue': '#2196f3',
+        'te-purple': '#9c27b0',
+        'te-red': '#f44336',
+        'te-yellow': '#ffeb3b',
       },
       fontFamily: {
         'inter': ['Inter', 'sans-serif'],

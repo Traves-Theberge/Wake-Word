@@ -120,7 +120,7 @@ export function SettingsPanel({}: SettingsPanelProps) {
           <motion.button
             onClick={handleToggleListening}
             disabled={isToggling || !config.apiKey.trim()}
-            className="te-button-primary mb-6 te-no-drag"
+            className="te-button te-button-primary mb-6 te-no-drag"
             animate={{
               backgroundColor: isListening ? '#dc2626' : '#ff6b35',
             }}
@@ -193,74 +193,61 @@ export function SettingsPanel({}: SettingsPanelProps) {
           
           <div className="flex items-center justify-center gap-8">
             {/* Cursor Toggle */}
-            <label className="flex items-center gap-3 cursor-pointer te-no-drag">
-              <div className="relative">
-                <input
-                  type="checkbox"
-                  checked={config.enableCursor}
-                  onChange={(e) => config.setEnableCursor(e.target.checked)}
-                  className="sr-only te-no-drag"
-                />
-                <div className={`w-6 h-6 rounded border-2 transition-all duration-300 ${
-                  config.enableCursor 
-                    ? 'bg-te-orange border-te-orange' 
-                    : 'bg-te-surface border-te-border hover:border-te-orange'
-                }`}>
-                  {config.enableCursor && (
-                    <svg 
-                      className="w-4 h-4 text-white absolute top-0.5 left-0.5" 
-                      fill="currentColor" 
-                      viewBox="0 0 20 20"
-                    >
-                      <path 
-                        fillRule="evenodd" 
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
-                        clipRule="evenodd" 
-                      />
-                    </svg>
-                  )}
+            <label className="te-checkbox-container te-no-drag">
+              <input
+                type="checkbox"
+                checked={config.enableCursor}
+                onChange={(e) => config.setEnableCursor(e.target.checked)}
+                className="sr-only te-no-drag"
+              />
+              <div className="te-checkbox-wrapper">
+                <div className={`te-checkbox ${config.enableCursor ? 'checked' : ''}`}>
+                  <svg 
+                    className="te-checkbox-icon" 
+                    fill="currentColor" 
+                    viewBox="0 0 20 20"
+                  >
+                    <path 
+                      fillRule="evenodd" 
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
+                      clipRule="evenodd" 
+                    />
+                  </svg>
                 </div>
               </div>
-              <span className="text-te-text font-medium text-lg">
+              <span className="te-checkbox-label">
                 Cursor
               </span>
             </label>
 
             {/* Claude Toggle */}
-            <label className="flex items-center gap-3 cursor-pointer te-no-drag">
-              <div className="relative">
-                <input
-                  type="checkbox"
-                  checked={config.enableClaude}
-                  onChange={(e) => config.setEnableClaude(e.target.checked)}
-                  className="sr-only te-no-drag"
-                />
-                <div className={`w-6 h-6 rounded border-2 transition-all duration-300 ${
-                  config.enableClaude 
-                    ? 'bg-te-orange border-te-orange' 
-                    : 'bg-te-surface border-te-border hover:border-te-orange'
-                }`}>
-                  {config.enableClaude && (
-                    <svg 
-                      className="w-4 h-4 text-white absolute top-0.5 left-0.5" 
-                      fill="currentColor" 
-                      viewBox="0 0 20 20"
-                    >
-                      <path 
-                        fillRule="evenodd" 
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
-                        clipRule="evenodd" 
-                      />
-                    </svg>
-                  )}
+            <label className="te-checkbox-container te-no-drag">
+              <input
+                type="checkbox"
+                checked={config.enableClaude}
+                onChange={(e) => config.setEnableClaude(e.target.checked)}
+                className="sr-only te-no-drag"
+              />
+              <div className="te-checkbox-wrapper">
+                <div className={`te-checkbox ${config.enableClaude ? 'checked' : ''}`}>
+                  <svg 
+                    className="te-checkbox-icon" 
+                    fill="currentColor" 
+                    viewBox="0 0 20 20"
+                  >
+                    <path 
+                      fillRule="evenodd" 
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
+                      clipRule="evenodd" 
+                    />
+                  </svg>
                 </div>
               </div>
-              <span className="text-te-text font-medium text-lg">
+              <span className="te-checkbox-label">
                 Claude
               </span>
             </label>
           </div>
-          
 
         </div>
 
@@ -268,7 +255,7 @@ export function SettingsPanel({}: SettingsPanelProps) {
           <motion.button
             onClick={handleTestKey}
             disabled={isTestingConnection || !config.apiKey.trim()}
-            className={`te-button-secondary flex-1 max-w-xs te-no-drag ${
+            className={`te-button te-button-secondary flex-1 max-w-xs te-no-drag ${
               testButtonState === 'success' ? 'bg-green-600 text-white' : 
               testButtonState === 'error' ? 'bg-red-600 text-white' : ''
             }`}
@@ -301,7 +288,7 @@ export function SettingsPanel({}: SettingsPanelProps) {
           <motion.button
             onClick={handleSaveConfig}
             disabled={!config.apiKey.trim() || isSaving}
-            className={`te-button-primary flex-1 max-w-xs te-no-drag ${
+            className={`te-button te-button-primary flex-1 max-w-xs te-no-drag ${
               saveButtonState === 'success' ? 'bg-green-600' : 
               saveButtonState === 'error' ? 'bg-red-600' : ''
             }`}
