@@ -1,1 +1,90 @@
 A copy of license terms is available at https://picovoice.ai/docs/terms-of-use/
+
+Terms of Use
+Last updated: Jan 17, 2025
+
+Effective Date: Feb 2, 2025
+
+These Terms of Use govern Your use of this website, all related websites, services, software, data, and content made available by Picovoice, as further described below.
+
+1. Legal and Contact Information
+For any commercial inquiries, please fill out the sales form.
+For any legal matters, please contact legal@picovoice.ai.
+2. Definitions
+“Terms” refers to this Terms of Use document.
+“You” (“User”) means the person or entity agreeing to Terms.
+“Picovoice” refers to Picovoice Inc., a Canadian corporation registered in the province of British Columbia.
+“Website” means https://picovoice.ai, https://console.picovoice.ai/, and any other website operated by Picovoice.
+“Console” is a web-based platform created by Picovoice for designing, training, and testing voice recognition models.
+“Software” means any software Picovoice makes available for download from the Website, Console, or any other public source.
+“Content” means any guides, policies, presentations, demos, or other written information made available by Picovoice.
+“Services” refers to the collection of Website, Console, Software, Content, and any cloud-based services provided by Picovoice.
+“Additional Agreement” is a written agreement between You and Picovoice.
+“Model” means the set of parameterizable transformations between an input signal and a transformed signal and belonging to Picovoice.
+“Picovoice Trademark” means any name, trade name, wordmark, logo, art, visual representation, colour scheme, or other distinctive visual sign designating Picovoice.
+3. Scope
+These Terms apply to Your use of Services and Picovoice Trademark.
+If You have an Additional Agreement with Picovoice, the terms of that agreement apply in addition to Terms and prevail over any conflicting terms herein.
+Picovoice reserves the sole right and discretion to determine whether Your use of the Services and Picovoice Trademark complies with Terms, and to terminate Your access in the event it determines that Your said use fails to do so.
+4. Accepting these Terms
+To use Services, You must agree to Terms. Any use of Services is subject to Terms contained herein and shall be considered acceptance of Terms.
+You may not use Services and may not accept Terms if You are under the age of eighteen (18) or if You are a person barred from using Services under any law or contract with a third party. By accepting Terms you represent that You are eighteen (18) years of age or older and that You are not using Services in violation of any applicable law or contract with a third party.
+As part of the sign-up process, You may be asked to enter some information. This information may be used to adapt Services and our communications with You, and to enforce our rights with regards to Services. You represent that Your information is truthful and accurate and remains so throughout the period during which You use Services. Any false declarations may result in the revocation of Your right to use Services.
+You represent that You have full power, capacity, and authority to accept Terms. If You are accepting Terms on behalf of Your employer or another entity, You represent that You have the full legal authority to bind Your employer or such entity to Terms.
+Picovoice reserves the right to make changes to Terms and Services from time to time. When material changes are made to Terms, Picovoice will notify You before the changes to Terms take effect, and make an up-to-date copy of Terms available on Website. Sometimes Picovoice will ask you to consent to material changes to Terms. You understand and agree that if You use Services after the date on which Terms have changed, Picovoice will treat Your use as acceptance of updated Terms. If a change to Terms is unacceptable to You, You may terminate this agreement by ceasing use of Services.
+5. Privacy and Personal Data
+Privacy is the highest priority at Picovoice. As such, Picovoice abides by the Privacy Policy available at https://picovoice.ai/docs/privacy-policy/. How Picovoice collects and treats Your personal information and that of end-users is described in the Privacy Policy. You are required to make Picovoice Privacy Policy, or information substantially equivalent to the information it contains regarding Picovoice use of end-users personal data, available to any end-users of any product You make available to the public.
+You are responsible as sole data controller for the collection, storage, use and any other processing of end-user personal data (as defined by the GDPR) in the context of Your use of Services, including if You integrate, combine, or otherwise use, or allow a third party to integrate, combine or otherwise use Services with any software or hardware under your control. You are responsible for complying with all applicable laws and regulations in relation thereto.
+You are obligated to keep your credentials for using Services safe and are responsible for all activities that occur under your account.
+Use of end-user personal data by Picovoice:
+Picovoice may collect data strictly necessary for purposes of usage reporting, billing, and fraud prevention and detection.
+Services may automatically store usage data on the device on which it is embarked until it next connects to the Internet. If and when the device is connected to the Internet, the usage data will be pushed to a Picovoice server.
+6. License and Intellectual Property Rights
+Picovoice grants You a worldwide, non-exclusive, revocable, non-transferable, non-sublicensable right, to use Services provided full compliance with Terms.
+Additional license terms, including terms and conditions restricting or modifying the above License, may be included in an Additional Agreement between You and Picovoice.
+Picovoice strictly prohibits You from using Services for any illegal or regulated content and activities or in a way that infringes, misappropriates, or violates anyone’s rights. These content and activities include but are not limited to any threats to child safety, promotion or facilitation of transactions in illegal drugs, weapons, or illegal services such as human trafficking or sexual services, fraud and deception, impersonation, privacy violations, distribution of spammy content, misinformation, hate speech or violence.
+If You access or use our Services free of charge, You may only use the Services for non-commercial purpose. You may use the Services for commercial purposes, only if You access or use our Services through a paid plan.
+Picovoice strictly prohibits You from using any part of our Services to research and develop products, models, or services that compete with Picovoice, or otherwise compete with Picovoice.
+Any fraud or non-compliance with the License terms on Your part revealed by an audit or inspection or otherwise discovered by Picovoice shall constitute a material breach of these Terms.
+Picovoice reserves all rights to Services not expressly granted herein.
+No third party is permitted to use Services on Your behalf without Picovoice prior written consent.
+Unauthorized use of Services or failure to comply with this License, will result in automatic termination of the License, without prejudice to any other remedies available to Picovoice under applicable law.
+Nothing in Terms shall result in any transfer of intellectual property rights over Services.
+You may not publicly disclose directly or through a third party the results of any comparative or compatibility testing, benchmarking, or evaluation (each, a "Benchmark") of the Services, unless the disclosure includes all information necessary for Picovoice or a third party to replicate the Benchmark. If You conduct, or direct a third party to conduct, a Benchmark of the Services and publicly disclose the results directly or through a third party, then Picovoice (or a Picovoice-directed third party) may conduct Benchmarks of any publicly available products or services provided by You and publicly disclose the results of any such Benchmark under the same conditions.
+You may not access the Services to bring an intellectual property infringement claim against Picovoice or to create a product or service competitive with the Services.
+The use of Services may incur fees as indicated on Picovoice’s pricing page. You agree to pay these fees within 30 days of receiving the invoice. A failure to do so results in interest accrual and possible termination of your account.
+You may not access the Services in a manner intended to avoid incurring fees or exceeding usage limits or quotas.
+You agree that You will not attempt to reverse engineer Services in whole or in part.
+Picovoice may identify Your organization as a recipient of these rights and use Your organization's logo and name in sales presentations, marketing materials and press releases for promotional purposes.
+7. Trademark License
+Picovoice grants You a non-exclusive, worldwide, revocable, non-transferable, non-assignable, non-sublicensable, royalty-free license to display the Picovoice Trademark solely to promote or advertise Your authorized use of Services by Terms.
+In using the Picovoice Trademark, You will not:
+Remove any Picovoice Trademark contained in Services
+Display the Picovoice Trademark in any manner that implies a relationship, affiliation, sponsorship, or endorsement by Picovoice, or that can be reasonably interpreted to suggest editorial content has been authored by or represents the views or opinions of, Picovoice or its personnel
+Display the Picovoice Trademark about Your use of Services if it contains or displays adult content or promotes illegal activities
+Display the Picovoice Trademark as the most prominent element in Your communication
+Display the Picovoice Trademark in a manner that is misleading, defamatory, infringing, libellous, disparaging, obscene, or otherwise objectionable to Picovoice
+Use the Picovoice Trademark to disparage Picovoice or Services
+Display the Picovoice Trademark in any way that violates any law or regulation
+Remove, distort, or alter any element of the Picovoice Trademark (including squeezing, stretching, inverting, or discolouring)
+8. Terminating these Terms
+Terms will continue to apply until terminated by either You or Picovoice.
+You may terminate Your legal agreement with Picovoice by ceasing use of the Services at any time. To cease use of Services, it is Your responsibility to delete all copies of the Software provided by or procured through Your use of Services, directly or indirectly and installed on any device. You do not need to specifically inform Picovoice when You stop using the Service. You will not receive any refunds if You terminate.
+Picovoice reserves the right to terminate Terms or discontinue Services for any reason and at any time without liability or other obligation to You.
+When the agreement between You and Picovoice is terminated, those clauses that by their nature are intended to continue indefinitely will continue to apply.
+9. Exclusion of Warranties and Liability
+Services are not supported. You acknowledge that, to the extent permitted by law, Services are provided "as is" and "as available" without any warranty of any kind, whether express or implied, including the implied warranties and conditions of merchantability, fitness for a particular purpose, and may be terminated at any time. In particular, Picovoice does not represent or warrant to You that Services will meet Your requirements, be uninterrupted, timely, secure, or error-free, accurate or reliable, or that defects in the operation or functionality of Services will be corrected. Any element obtained through Services is at Your own risk. No advice or information, whether oral or written, obtained by You from Picovoice or through Services will create any warranty not expressly stated in these Terms.
+To the extent permitted by law, Picovoice disclaims all obligation and liability under Terms for any harm or damage arising out of or in connection with Services.
+Artificial intelligence and machine learning are rapidly evolving fields. When You use our Services, You understand and agree our Services may return inaccurate, incomplete, or incorrect results or responses. You are solely responsible for the evaluation of the accuracy and appropriateness of our Services for Your use case.
+10. Indemnities
+You will defend and indemnify Picovoice and its affiliates, directors, officers, employees, strategic partners, licensors, and their suppliers (the "Indemnified Parties") against all liabilities, damages, losses, costs, fees (including legal fees), and expenses relating to any allegation or third-party legal proceeding to the extent arising from Your alleged use of Services in breach of Terms, applicable policies, or applicable law, or in breach of a third-party’s rights.
+You will cooperate as fully as reasonably required in the defence of any allegation or third-party legal proceeding. Picovoice reserves the right, at its own expense, to assume the exclusive control and defence of any indemnified matter.
+11. General
+Either You or Picovoice may assign Terms with full binding effect to its successors.
+Picovoice will not be considered to have waived any rights by not exercising or delaying the exercise of any of its rights under Terms or the applicable law.
+Picovoice affiliates and the Indemnified Parties are third-party beneficiaries to Terms and are entitled to directly enforce, and rely on, any clause that confers a right or benefit to them. There are no other third-party beneficiaries to Terms.
+If any section or part of a section within Terms is invalid, illegal or unenforceable, the rest of the clauses will remain in effect.
+You understand and agree that damages for improper use of the Services may be irreparable. Therefore, Picovoice is entitled to seek equitable relief, including injunctions in any jurisdiction, in addition to all other remedies available.
+If Terms are translated into any other language, and there are discrepancies between the English text and the translated text, the English text will govern.
+To the maximum extent permissible by law, all claims arising out of or relating to these Terms, the Software and/or the Service will be governed by Canadian law, excluding Canadian conflict of law rules, and will be litigated exclusively in Vancouver, British Columbia; You consent to personal jurisdiction in that court.
+To the maximum extent permissible by law, all claims arising out of or relating to Terms and Services will be governed by Canadian law and will be litigated exclusively in Vancouver, British Columbia.

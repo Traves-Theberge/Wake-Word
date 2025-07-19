@@ -17,7 +17,6 @@ Go to [https://console.picovoice.ai/ppn](https://console.picovoice.ai/ppn)
 1. Click "Create New Keyword"
 2. Enter the phrase exactly as you want to say it:
    - **"hey claude"** ✅ (already done)
-   - **"hey gemini"** (optional for future)
 
 ### Step 3: Train the Keywords
 1. Record yourself saying the phrase multiple times
@@ -29,7 +28,6 @@ Go to [https://console.picovoice.ai/ppn](https://console.picovoice.ai/ppn)
 1. Download the generated `.ppn` files
 2. Rename them to:
    - `hey-claude.ppn` ✅ (you have this)
-   - `hey-gemini.ppn` (optional)
 3. Place files in this `keywords/` folder
 
 ## 📁 Current File Structure
