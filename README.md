@@ -1,281 +1,228 @@
-# Wake Word Detector
+# Claude Wake Word Detector 🎤
 
-A highly configurable voice-activated wake word detection application that listens for "Hey Claude" and executes customizable commands, including opening terminals, launching applications, or running complex workflows.
+A professional Windows desktop application that listens for the "Hey Claude" wake word and executes customizable commands. Built with Electron, React, and TypeScript.
 
-## ✅ Status: Production Ready
+## ✨ Features
 
-The application is fully functional with reliable wake word detection and command execution. Say "Hey Claude" to instantly open both Cursor IDE and a WSL terminal with Claude CLI ready to use.
+- **Voice Wake Word Detection** - Listen for "Hey Claude" wake word
+- **System Tray Integration** - Background operation with tray controls
+- **Settings Panel** - Configure API keys and sensitivity
+- **Professional UI** - Modern dark theme with glassmorphism design
+- **Start/Stop Control** - Toggle listening on/off
+- **Test Mode** - Test wake word detection without triggering actions
+- **Multiple Command Execution** - Execute multiple commands with one wake word
+- **WSL Integration** - Run commands in WSL or native Windows
+- **Delayed Execution** - Add delays between multiple commands
+- **Working Directory Control** - Set custom working directories
 
-## Features
-
-- 🎤 **Voice Activation**: Say "Hey Claude" to trigger configurable actions
-- 🖥️ **System Tray**: Runs quietly in the background with tray icon controls
-- ⚙️ **Settings Panel**: Easy configuration of API keys and sensitivity
-- 🔄 **Start/Stop Control**: Toggle listening on/off from the tray menu
-- 🎯 **Test Mode**: Test wake word detection without triggering actions
-- 📦 **Easy Installation**: Professional Windows installer with uninstaller
-- 🔧 **Multiple Executions**: Execute multiple commands with one wake word
-- 🌐 **WSL & Native Support**: Run commands in WSL or native Windows
-- ⏱️ **Delayed Execution**: Add delays between multiple commands
-- 📂 **Working Directory Control**: Set custom working directories
-
-## Installation
+## 🚀 Quick Start
 
 ### For End Users
 
-1. Download the latest `Claude-Wake-Word-Detector-Setup.exe` from releases
-2. Run the installer and follow the setup wizard
-3. Launch the application from Start Menu or Desktop shortcut
-4. Configure your Picovoice API key in Settings
-5. Click "Start Listening" to begin voice detection
+1. **Download the installer** from the [Releases](https://github.com/yourusername/wake-word-detector/releases) page
+2. **Run the installer** and follow the wizard
+3. **Launch the application** from desktop or start menu
+4. **Configure your Picovoice API key** in Settings
+5. **Start listening** for "Hey Claude"
 
 ### For Developers
 
-1. Clone this repository
-2. Install dependencies: `npm install`
-3. Build the application: `npm run build`
-4. Run in development: `npm run dev`
-5. Build installer: `npm run build-installer-win`
-
-## Configuration
-
-### Picovoice API Key
-
-1. Get a free API key from [Picovoice Console](https://console.picovoice.ai/)
-2. Open the application settings (right-click tray icon → Settings)
-3. Enter your API key and save
-
-### Environment Variables Configuration
-
-Create a `.env` file in the project root or set environment variables:
-
-#### Basic Configuration
 ```bash
-# Required: Your Picovoice API key
-PICOVOICE_ACCESS_KEY=your_key_here
+# Clone the repository
+git clone https://github.com/yourusername/wake-word-detector.git
+cd wake-word-detector
 
-# Basic settings
-USE_WSL=true                    # Use WSL for commands (default: true)
-TERMINAL_TITLE=Claude Assistant # Terminal window title
-DEFAULT_COMMAND=claude          # Default command to execute
-WORKING_DIRECTORY=/path/to/dir  # Set working directory
-ENABLE_FALLBACK=true           # Enable fallback mode (default: true)
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run dist
+
+# Create installer
+npm run installer:full
 ```
 
-#### Multiple Executions
-Execute multiple commands when "hey claude" is detected:
-
-```bash
-# Execution 1: Open Claude in WSL
-EXECUTION_1_COMMAND=claude
-EXECUTION_1_USE_WSL=true
-EXECUTION_1_TITLE=Claude Assistant
-EXECUTION_1_DELAY=0
-
-# Execution 2: Open VS Code
-EXECUTION_2_COMMAND=code .
-EXECUTION_2_USE_WSL=false
-EXECUTION_2_TITLE=VS Code
-EXECUTION_2_DELAY=1000
-
-# Execution 3: Start development server
-EXECUTION_3_COMMAND=npm start
-EXECUTION_3_USE_WSL=true
-EXECUTION_3_WORKING_DIRECTORY=/home/user/project
-EXECUTION_3_DELAY=2000
-```
-
-#### Advanced Options
-```bash
-# Custom script content (use \n for line breaks)
-CUSTOM_SCRIPT_CONTENT=#!/bin/bash\nclear\necho "Custom!"\nclaude
-
-# Audio device selection
-AUDIO_DEVICE_INDEX=0
-```
-
-### Configuration Help
-
-Run `npm run dev-console --help` to see all available configuration options and examples.
-
-### Wake Word Sensitivity
-
-Adjust the sensitivity slider in Settings:
-- **Lower values** = fewer false positives, may miss some detections
-- **Higher values** = more sensitive, may trigger accidentally
-
-## How It Works
-
-1. **Wake Word Detection**: Uses Picovoice Porcupine engine with trained "hey-claude.ppn" model
-2. **Voice Processing**: Continuously monitors microphone input for the phrase "Hey Claude"
-3. **Terminal Integration**: When detected, creates a bash script in WSL `/tmp/` directory
-4. **Claude Activation**: Opens Windows Terminal with new WSL tab running Claude CLI
-5. **Ready to Use**: Claude is immediately available for conversation
-
-## System Requirements
-
-- Windows 10/11 with WSL installed
-- Node.js 16+ (for development)
-- Microphone access
-- Windows Terminal (recommended) or Command Prompt
-- Claude CLI installed in WSL environment
-
-## Usage
-
-### Tray Menu Options
-
-- **Start/Stop Listening**: Toggle wake word detection
-- **Settings**: Configure API key and sensitivity
-- **Test Wake Word**: Simulate detection for testing
-- **Quit**: Exit the application
-
-### Voice Commands
-
-Simply say **"Hey Claude"** clearly when the application is listening. The configured actions will execute based on your environment settings.
-
-## Configuration Examples
-
-### Example 1: Default Behavior (Claude + Editor)
-```bash
-PICOVOICE_ACCESS_KEY=your_key_here
-# No EXECUTION_X variables needed - automatically runs:
-# 1. Claude in WSL (immediate)
-# 2. Editor after 1 second (cursor by default)
-
-# To use a different editor:
-EDITOR_COMMAND=code        # VS Code
-# or
-EDITOR_COMMAND=notepad     # Windows Notepad (always available)
-```
-
-### Example 2: Custom Development Workflow
-```bash
-PICOVOICE_ACCESS_KEY=your_key_here
-
-# Open Claude
-EXECUTION_1_COMMAND=claude
-EXECUTION_1_USE_WSL=true
-EXECUTION_1_TITLE=Claude Assistant
-
-# Open Cursor IDE after 1 second
-EXECUTION_2_COMMAND=cursor
-EXECUTION_2_USE_WSL=false
-EXECUTION_2_DELAY=1000
-
-# Start development server after 3 seconds
-EXECUTION_3_COMMAND=npm run dev
-EXECUTION_3_USE_WSL=true
-EXECUTION_3_WORKING_DIRECTORY=/home/user/my-project
-EXECUTION_3_DELAY=3000
-```
-
-### Example 3: Full Stack Development
-```bash
-PICOVOICE_ACCESS_KEY=your_key_here
-
-# Start database
-EXECUTION_1_COMMAND=docker-compose up -d postgres
-EXECUTION_1_USE_WSL=true
-EXECUTION_1_WORKING_DIRECTORY=/home/user/my-app
-
-# Start backend server
-EXECUTION_2_COMMAND=npm run server
-EXECUTION_2_USE_WSL=true
-EXECUTION_2_WORKING_DIRECTORY=/home/user/my-app/backend
-EXECUTION_2_DELAY=2000
-
-# Start frontend
-EXECUTION_3_COMMAND=npm run dev
-EXECUTION_3_USE_WSL=true
-EXECUTION_3_WORKING_DIRECTORY=/home/user/my-app/frontend
-EXECUTION_3_DELAY=4000
-
-# Open VS Code
-EXECUTION_4_COMMAND=code .
-EXECUTION_4_USE_WSL=false
-EXECUTION_4_WORKING_DIRECTORY=/home/user/my-app
-EXECUTION_4_DELAY=1000
-
-# Open browser
-EXECUTION_5_COMMAND=start http://localhost:3000
-EXECUTION_5_USE_WSL=false
-EXECUTION_5_DELAY=8000
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"Configuration Required" Error**
-   - Open Settings and enter your Picovoice API key
-
-2. **"Keyword File Missing" Error**
-   - Ensure `hey-claude.ppn` exists in the keywords folder
-   - Reinstall the application if missing
-
-3. **Wake Word Not Detected**
-   - Check microphone permissions
-   - Increase sensitivity in Settings
-   - Speak clearly and at normal volume
-   - Ensure background noise is minimal
-
-4. **Terminal Doesn't Open**
-   - Verify WSL is installed and working
-   - Check that Claude CLI is installed in WSL
-   - Try using Command Prompt as fallback
-
-5. **"Command Not Found" Error (ENOENT)**
-   - The default editor (cursor) is not installed
-   - Set `EDITOR_COMMAND=code` for VS Code
-   - Set `EDITOR_COMMAND=notepad` for Windows Notepad (always available)
-   - Or install Cursor IDE from https://cursor.sh
-
-### Logs and Debugging
-
-- Use "View Logs" in Settings for detailed information
-- Test connection to verify API key validity
-- Use "Test Wake Word" to simulate detection
-
-## Development
-
-### Project Structure
+## 📁 Project Structure
 
 ```
-src/
-├── tray-app.ts          # Main Electron tray application
-├── configurable-wake-detector.ts  # Wake word detection logic
-├── config.ts            # Configuration management
-└── index.ts             # Base detector class
-
-ui/
-└── settings.html        # Settings panel interface
-
-keywords/
-└── hey-claude.ppn       # Trained wake word model
+Wakeword/
+├── 📄 README.md                    # This file
+├── 📄 package.json                 # Dependencies and scripts
+├── 📁 src/                         # Source code
+│   ├── 📁 main/                    # Electron main process
+│   └── 📁 renderer/                # React frontend
+├── 📁 scripts/                     # Build and installation scripts
+│   ├── 📄 build-installer.ps1      # PowerShell installer builder
+│   ├── 📄 Build-Installer.bat      # Batch installer builder
+│   └── 📄 Install-Shortcuts.bat    # Desktop shortcut installer
+├── 📁 installer/                   # Installer files
+│   ├── 📄 installer.nsi            # NSIS installer script
+│   ├── 📄 Claude-Wake-Word-Detector-Setup.exe  # Built installer
+│   └── 📄 README.txt               # Post-installation help
+├── 📁 docs/                        # Documentation
+│   ├── 📄 CONTRIBUTING.md          # Contributing guidelines
+│   ├── 📄 CHANGELOG.md             # Version history
+│   └── 📄 PROJECT-STRUCTURE.md     # Detailed project structure
+├── 📁 assets/                      # Application assets
+└── 📁 keywords/                    # Wake word models
 ```
 
-### Building
+## 🔧 Development
+
+### Prerequisites
+
+- **Node.js 18+** - [Download here](https://nodejs.org/)
+- **Windows 10/11** - For development and testing
+- **PowerShell 5.0+** - For build scripts
+- **NSIS 3.09+** - For installer building (optional)
+
+### Available Scripts
 
 ```bash
 # Development
-npm run dev                 # Run in development mode
-npm run dev-console        # Run console version
+npm run dev                    # Start development server
+npm run build                  # Build application
+npm run dist                   # Create production package
 
-# Production
-npm run build              # Build TypeScript
-npm run start              # Run built Electron app
-npm run build-installer    # Create installer
+# Installer
+npm run installer              # Build installer (requires NSIS)
+npm run installer:full         # Install NSIS and build installer
+npm run installer:nsis         # Install NSIS only
+
+# Shortcuts
+npm run shortcuts:install      # Create desktop shortcuts
+npm run shortcuts:uninstall    # Remove desktop shortcuts
 ```
 
-## License
+### Manual Build Steps
 
-MIT License - see LICENSE file for details.
+```bash
+# 1. Install dependencies
+npm install
 
-## Author
+# 2. Build application
+npm run dist
 
-Traves Theberge
+# 3. Create installer (optional)
+scripts\build-installer.ps1 -BuildInstaller
 
-## Contributing
+# 4. Install shortcuts (optional)
+scripts\Install-Shortcuts.bat
+```
+
+## 📦 Installation
+
+### Windows Installer
+
+1. Download `Claude-Wake-Word-Detector-Setup.exe` from the [Releases](https://github.com/yourusername/wake-word-detector/releases) page
+2. Run the installer and follow the wizard
+3. Choose installation options:
+   - **Main Application** (required)
+   - **Desktop Shortcut** (recommended)
+   - **Start Menu Shortcut** (recommended)
+   - **Auto-start with Windows** (optional)
+4. Launch from desktop or start menu
+
+### Manual Installation
+
+```bash
+# 1. Build the application
+npm run dist
+
+# 2. Create shortcuts (optional)
+scripts\Install-Shortcuts.bat
+
+# 3. Launch from release folder
+release\Claude Wake Word Detector-win32-x64\Claude-Wake-Word-Detector.exe
+```
+
+## ⚙️ Configuration
+
+### Picovoice API Key
+
+1. Sign up at [Picovoice Console](https://console.picovoice.ai/)
+2. Get your free API key
+3. Open the application settings
+4. Enter your API key in the settings panel
+
+### Custom Commands
+
+Configure commands to execute when "Hey Claude" is detected:
+
+1. Open Settings in the application
+2. Add commands in the format: `command.exe [arguments]`
+3. Set working directory if needed
+4. Add delays between multiple commands
+5. Test with the Test Mode
+
+### WSL Integration
+
+To run commands in WSL:
+
+1. Use the command format: `wsl [your-command]`
+2. Example: `wsl echo "Hello from WSL"`
+3. Set working directory to WSL path if needed
+
+## 🎯 Usage
+
+### Basic Operation
+
+1. **Launch the application** - It will start in the system tray
+2. **Configure settings** - Enter your Picovoice API key
+3. **Start listening** - Click the Start button
+4. **Say "Hey Claude"** - The application will detect the wake word
+5. **Commands execute** - Your configured commands will run
+
+### System Tray Controls
+
+- **Green icon** - Listening for wake word
+- **Red icon** - Not listening
+- **Right-click menu** - Quick access to settings and controls
+
+### Test Mode
+
+Use Test Mode to verify wake word detection without executing commands:
+
+1. Enable Test Mode in settings
+2. Say "Hey Claude" to test detection
+3. Check the logs for detection events
+4. Disable Test Mode when ready
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+**Microphone not working:**
+- Check Windows privacy settings
+- Ensure microphone permissions are granted
+- Try running as administrator
+
+**Wake word not detected:**
+- Verify Picovoice API key is correct
+- Check microphone is working
+- Adjust sensitivity settings
+- Test with different wake word models
+
+**Commands not executing:**
+- Check command syntax
+- Verify working directory exists
+- Test commands manually first
+- Check Windows security settings
+
+### Getting Help
+
+- **Documentation** - Check `docs/` folder for detailed guides
+- **Issues** - Report bugs on [GitHub Issues](https://github.com/yourusername/wake-word-detector/issues)
+- **Discussions** - Ask questions in [GitHub Discussions](https://github.com/yourusername/wake-word-detector/discussions)
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
+
+### Quick Contribution
 
 1. Fork the repository
 2. Create a feature branch
@@ -283,9 +230,23 @@ Traves Theberge
 4. Test thoroughly
 5. Submit a pull request
 
-## Support
+## 📄 License
 
-For issues or questions:
-1. Check the troubleshooting section
-2. Review existing GitHub issues
-3. Create a new issue with details about your problem 
+This project is licensed under the MIT License - see [LICENSE.txt](installer/LICENSE.txt) for details.
+
+## 🙏 Acknowledgments
+
+- **Picovoice** - For the Porcupine wake word detection engine
+- **Electron** - For the cross-platform desktop framework
+- **React** - For the modern UI framework
+- **Tailwind CSS** - For the utility-first styling
+
+## 📈 Version History
+
+See [CHANGELOG.md](docs/CHANGELOG.md) for detailed version history and changes.
+
+---
+
+**Made with ❤️ by Traves Theberge**
+
+For support, questions, or contributions, please visit our [GitHub repository](https://github.com/yourusername/wake-word-detector). 
