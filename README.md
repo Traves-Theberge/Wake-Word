@@ -4,8 +4,6 @@
 
 ![Wake Word Detector Settings](assets/wakeword.png)
 
-[![Release](https://img.shields.io/github/v/release/Traves-Theberge/Wakeword?style=for-the-badge&color=orange)]([https://github.com/Traves-Theberge/Wakeword/releases](https://github.com/Traves-Theberge/Wakeword/releases/tag/v1.0.0b))
-[![Downloads](https://img.shields.io/github/downloads/Traves-Theberge/Wakeword/total?style=for-the-badge&color=blue)](https://github.com/Traves-Theberge/Wakeword/releases)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE.txt)
 [![Powered by](https://img.shields.io/badge/Powered%20by-Picovoice-purple?style=for-the-badge)](https://picovoice.ai/)
 
