@@ -54,7 +54,6 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
 
   async start(): Promise<void> {
     if (this._isListening) {
-      console.log('🎤 Already listening for "Hey Claude"')
       return
     }
 
@@ -62,12 +61,6 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
     if (!this.config.picovoiceAccessKey) {
       throw new Error('Picovoice access key not configured')
     }
-
-    console.log('📋 Config loaded:', { 
-      hasApiKey: !!this.config.picovoiceAccessKey, 
-      enableCursor: this.config.enableCursor ?? true,
-      enableClaude: this.config.enableClaude ?? true
-    })
 
     try {
       // Initialize Porcupine with the Hey Claude keyword
@@ -88,7 +81,6 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
       this.recorder = new PvRecorder(this.porcupine.frameLength, -1) // -1 for default device
       this.recorder.start()
 
-      console.log('🎤 Starting to listen for "Hey Claude"')
       this._isListening = true
       
       // Start detection loop
@@ -110,11 +102,9 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
 
   async stop(): Promise<void> {
     if (!this._isListening) {
-      console.log('🔇 Already stopped listening')
       return
     }
 
-    console.log('🔇 Stopped listening for wake words')
     this._isListening = false
     
     this.cleanup()
@@ -139,7 +129,6 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
         const keywordIndex = this.porcupine.process(audioFrame)
         
         if (keywordIndex !== -1) {
-          console.log('🎤 Wake word detected! Opening WSL terminal...')
           this.onWakeWordDetected()
         }
       } catch (error) {
@@ -163,52 +152,56 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
       const enableClaude = this.config.enableClaude ?? true
       
       console.log('🎤 Wake word detected!')
-      console.log('📊 Current settings:', { enableCursor, enableClaude })
       
       // If neither command is enabled, do nothing
       if (!enableCursor && !enableClaude) {
-        console.log('⚠️ Both cursor and claude are disabled - no action taken')
         return
       }
 
       // Execute commands in Windows shell so they run side-by-side
       const spawnCursorCommand = () => {
-        // Execute cursor command silently in background using PowerShell
+        // Execute cursor command silently for production
         try {
-          console.log('🔧 Starting Cursor...')
+          // Try direct spawn first (most reliable)
+          const cursorPath = `${process.env.LOCALAPPDATA}\\Programs\\cursor\\Cursor.exe`
           
-          // Use PowerShell to start cursor in background (but visible so it actually opens)
-          const cursorChild = spawn('powershell', [
-            '-Command',
-            `
-            Write-Host "Starting cursor execution...";
-            try {
-              # Try simple cursor command (no arguments - just like C:\Users\trave>cursor)
-              Start-Process -FilePath "cursor" -WindowStyle Normal;
-              Write-Host "Cursor started successfully";
-            } catch {
-              # Fallback to VS Code if cursor not found
+          const directChild = spawn(cursorPath, [], {
+            detached: true,
+            stdio: 'ignore'
+          })
+          
+          directChild.on('error', () => {
+            // Fallback to PowerShell method if direct spawn fails
+            const psChild = spawn('powershell', [
+              '-WindowStyle', 'Hidden',
+              '-ExecutionPolicy', 'Bypass',
+              '-Command',
+              'Start-Process -FilePath "$env:LOCALAPPDATA\\Programs\\cursor\\Cursor.exe" -WindowStyle Normal'
+            ], {
+              detached: true,
+              stdio: 'ignore'
+            })
+            
+            psChild.on('error', () => {
+              // Final fallback: Try VS Code
               try {
-                Start-Process -FilePath "code" -WindowStyle Normal;
-                Write-Host "VS Code started as fallback";
+                const codeChild = spawn('code', [], {
+                  detached: true,
+                  stdio: 'ignore'
+                })
+                codeChild.unref()
               } catch {
-                Write-Host "Neither cursor nor code found in PATH";
+                // Silent failure - no editors available
               }
-            }
-            `
-          ], {
-            detached: false,
-            stdio: 'inherit'
+            })
+            
+            psChild.unref()
           })
           
-          cursorChild.on('exit', (code) => {
-            console.log(`✅ Cursor command completed with exit code: ${code}`)
-          })
+          directChild.unref()
           
-          console.log('✅ Cursor opened')
-          
-        } catch (error) {
-          console.error('❌ Failed to execute cursor command:', error)
+        } catch {
+          // Silent failure for production
         }
       }
 
@@ -222,42 +215,32 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
           })
           terminalChild.unref()
           
-          console.log('✅ Claude terminal opened')
-          
         } catch (error) {
-          console.error('❌ Failed to open WSL terminal:', error)
-          
           // Fallback: Try simpler WSL command
           try {
-            console.log('🔧 Trying fallback WSL approach...')
             const fallbackChild = spawn('cmd', ['/c', 'start', 'wt', 'wsl', 'claude'], {
               detached: true,
               stdio: 'ignore'
             })
             fallbackChild.unref()
-            console.log('✅ WSL terminal opened with fallback claude command')
-          } catch (fallbackError) {
-            console.error('❌ Fallback also failed:', fallbackError)
+          } catch {
+            // Silent failure
           }
         }
       }
 
             if (enableClaude) {
         // Execute Claude command first
-        console.log('🎯 Opening Claude terminal...')
         spawnClaudeCommand()
       }
 
       if (enableCursor) {
         // Launch Cursor command with slight delay to avoid interference
-        console.log('🎯 Opening Cursor (500ms delay)...')
         setTimeout(() => {
           spawnCursorCommand()
         }, 500)
       }
     } catch (error) {
-      console.error('Failed to execute wake word actions:', error)
-      
       // Only show fallback if at least one option is enabled
       const enableCursor = this.config.enableCursor ?? true
       const enableClaude = this.config.enableClaude ?? true
@@ -265,30 +248,14 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
       if (enableCursor || enableClaude) {
         // Fallback: Try using cmd to start Windows Terminal
         try {
-          const fallbackCommand = 'cmd'
-          const fallbackArgs = [
-            '/c', 
-            'start', 
-            'wt', 
-            'wsl', 
-            '--', 
-            'bash', 
-            '-c', 
-            'cd ~ && exec bash'
-          ]
-          
-          const fallbackChild = spawn(fallbackCommand, fallbackArgs, {
+          const fallbackChild = spawn('cmd', ['/c', 'start', 'wt', 'wsl'], {
             detached: true,
             stdio: 'ignore'
           })
-          
           fallbackChild.unref()
-          console.log('✅ WSL terminal opened (fallback)')
-        } catch (fallbackError) {
-          console.error('Fallback also failed:', fallbackError)
+        } catch {
+          // Silent failure
         }
-      } else {
-        console.log('⚠️ Both cursor and claude are disabled - no fallback action taken')
       }
     }
   }
@@ -416,8 +383,7 @@ function createWindow(): void {
   // Load the app
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000')
-    // Open dev tools to debug UI issues
-    mainWindow.webContents.openDevTools()
+    // Dev tools can be opened manually if needed
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
@@ -501,8 +467,6 @@ const trayIcons = createTrayIcons()
 
 // Icon verification function
 function verifyIconAssets(): boolean {
-  console.log('🔍 Verifying icon assets...')
-  
   const requiredIcons = [
     {
       name: 'Window Icon',
@@ -523,19 +487,11 @@ function verifyIconAssets(): boolean {
   let allIconsValid = true
   
   requiredIcons.forEach(({ name, path }) => {
-    if (existsSync(path)) {
-      console.log(`✅ ${name}: ${path}`)
-    } else {
+    if (!existsSync(path)) {
       console.error(`❌ ${name} MISSING: ${path}`)
       allIconsValid = false
     }
   })
-  
-  if (allIconsValid) {
-    console.log('✅ All icon assets verified successfully')
-  } else {
-    console.error('❌ Some icon assets are missing - application may not display correctly')
-  }
   
   return allIconsValid
 }
@@ -641,9 +597,8 @@ app.whenReady().then(async () => {
   // Auto-start listening on app launch
   try {
     await detector.start()
-    console.log('🎤 Auto-started listening for "Hey Claude"')
   } catch (error) {
-    console.log('⚠️ Could not auto-start listening:', error)
+    console.error('Could not auto-start listening:', error)
   }
   
   // Create window if no other windows are open (macOS)
