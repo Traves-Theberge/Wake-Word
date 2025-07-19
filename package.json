@@ -26,7 +26,9 @@
     "shortcuts:install": "scripts\\Install-Shortcuts.bat",
     "shortcuts:uninstall": "scripts\\Uninstall-Shortcuts.bat",
     "installer:build": "build-installer.bat",
-    "installer:quick": "npm run dist && build-installer.bat"
+    "installer:quick": "npm run dist && build-installer.bat",
+    "release:prepare": "powershell -ExecutionPolicy Bypass -File scripts\\create-release.ps1",
+    "release:dry-run": "powershell -ExecutionPolicy Bypass -File scripts\\create-release.ps1 -DryRun"
   },
   "keywords": [
     "wake-word",

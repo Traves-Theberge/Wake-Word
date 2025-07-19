@@ -1,0 +1,76 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Triggers on version tags like v1.0.0
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build application
+      run: npm run dist
+      
+    - name: Install NSIS
+      run: |
+        winget install NSIS.NSIS
+        echo "${env:ProgramFiles(x86)}\NSIS" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      
+    - name: Build installer
+      run: makensis installer.nsi
+      
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Wake Word Detector ${{ github.ref }}
+        body: |
+          🎤 Wake Word Detector Release
+          
+          ## What's New
+          - Professional Windows installer
+          - "Hey Claude" wake word detection
+          - System tray integration
+          - Configurable command launching
+          
+          ## Installation
+          1. Download `Wake-Word-Detector-Setup.exe`
+          2. Run as Administrator
+          3. Follow setup wizard
+          4. Configure Picovoice API key
+          
+          ## Requirements
+          - Windows 10/11 (64-bit)
+          - Picovoice API key (free at console.picovoice.ai)
+          - Microphone for voice detection
+          
+          **Powered by [Picovoice](https://picovoice.ai/) 🔊**
+        draft: false
+        prerelease: false
+        
+    - name: Upload Installer
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Wake-Word-Detector-Setup.exe
+        asset_name: Wake-Word-Detector-Setup.exe
+        asset_content_type: application/octet-stream
