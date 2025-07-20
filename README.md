@@ -399,59 +399,6 @@ npm run dev  # See console output for detailed logging
    ```
 5. **Open Pull Request**
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
-
-## 🌟 **Powered by Picovoice** 
-
-<div align="center">
-
-### *The Heart of Wake Word Detection*
-
-[![Picovoice](https://img.shields.io/badge/🎤_POWERED_BY-PICOVOICE-6B46C1?style=for-the-badge&labelColor=2D1B69)](https://picovoice.ai/)
-
-</div>
-
-This project showcases the incredible power of **[Picovoice](https://picovoice.ai/)** - the industry leader in on-device voice AI technology. Here's why Picovoice makes this project possible:
-
-<table>
-<tr>
-<td width="25%" align="center">
-
-### 🔒 **Privacy-First**
-All voice processing happens locally on your device. No audio data ever leaves your machine.
-
-</td>
-<td width="25%" align="center">
-
-### ⚡ **Lightning Fast**
-Sub-100ms detection latency with minimal CPU usage. Perfect for real-time applications.
-
-</td>
-<td width="25%" align="center">
-
-### 🎯 **Highly Accurate**
-Industry-leading false positive and false negative rates. Just works, reliably.
-
-</td>
-<td width="25%" align="center">
-
-### 👨‍💻 **Developer-Friendly**
-Excellent SDKs, documentation, and support. Easy integration with any platform.
-
-</td>
-</tr>
-</table>
-
-> *"Picovoice democratizes voice AI by making it accessible, private, and efficient for developers worldwide."*
-
-### **🔗 Picovoice Resources**
-- **[Get Your Free API Key](https://console.picovoice.ai/)** - Start building today
-- **[Porcupine Wake Word Engine](https://picovoice.ai/platform/porcupine/)** - The tech behind this app
-- **[Train Custom Keywords](https://console.picovoice.ai/ppn)** - Create your own wake words
-- **[Comprehensive Documentation](https://picovoice.ai/docs/)** - Everything you need to know
-
 ---
 
 ## 🙏 **Additional Acknowledgments**
