@@ -6,9 +6,17 @@
 
 You have the **"Hey Claude"** wake word ready to use! ✅
 
+**File Naming Convention:**
+Files must be named with the platform suffix:
+- `hey-claude-en-windows.ppn` - Windows platform
+- `hey-claude-en-linux.ppn` - Linux platform  
+- `hey-claude-en-mac.ppn` - macOS platform
+
 **Included Files:**
-- `hey-claude.ppn` - Your trained "Hey Claude" wake word model
+- `hey-claude-en-windows.ppn` - Your trained "Hey Claude" wake word model for Windows
 - `LICENSE.txt` - Picovoice licensing terms
+
+> ⚠️ **Important**: Wake word files (`.ppn`) are platform-specific! A file trained for Windows won't work on Linux or Mac. You must download the correct version for your platform from Picovoice Console.
 
 ## 🚀 How It Works
 

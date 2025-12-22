@@ -45,6 +45,21 @@ interface Config {
   picovoiceAccessKey?: string
   enableCursor?: boolean
   enableClaude?: boolean
+  enableVSCode?: boolean
+  enableBlackbox?: boolean
+}
+
+// Get platform-specific keyword filename
+function getKeywordFilename(): string {
+  const platform = process.platform === 'win32' ? 'windows' : process.platform === 'darwin' ? 'mac' : 'linux'
+  // Picovoice uses underscores and version numbers in their exports
+  if (platform === 'linux') {
+    return 'hey-claude_en_linux_v4_0_0.ppn'
+  } else if (platform === 'mac') {
+    return 'hey-claude_en_mac_v4_0_0.ppn'
+  } else {
+    return 'hey-claude-en-windows.ppn'
+  }
 }
 
 interface WakeWordDetector {
@@ -78,24 +93,25 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
     try {
       // Initialize Porcupine with the Hey Claude keyword
       let keywordPath: string
+      const keywordFilename = getKeywordFilename()
       
       if (isPackaged) {
         // Try multiple possible locations for packaged app
         const possiblePaths = [
-          join(process.resourcesPath, 'keywords/hey-claude.ppn'), // electron-packager
-          join(__dirname, '../../keywords/hey-claude.ppn'), // relative from main process
-          join(process.cwd(), 'keywords/hey-claude.ppn'), // current working directory
-          join(process.execPath, '../keywords/hey-claude.ppn'), // relative to executable
-          join(process.execPath, '../../keywords/hey-claude.ppn'), // one level up from executable
+          join(process.resourcesPath, `keywords/${keywordFilename}`), // electron-packager
+          join(__dirname, `../../keywords/${keywordFilename}`), // relative from main process
+          join(process.cwd(), `keywords/${keywordFilename}`), // current working directory
+          join(process.execPath, `../keywords/${keywordFilename}`), // relative to executable
+          join(process.execPath, `../../keywords/${keywordFilename}`), // one level up from executable
         ]
         
         keywordPath = possiblePaths.find(path => existsSync(path)) || possiblePaths[0]
       } else {
-        keywordPath = join(__dirname, '../../keywords/hey-claude.ppn')
+        keywordPath = join(__dirname, `../../keywords/${keywordFilename}`)
       }
       
       if (!existsSync(keywordPath)) {
-        throw new Error(`Hey Claude keyword file not found. Tried: ${keywordPath}`)
+        throw new Error(`Hey Claude keyword file not found for ${process.platform}. Expected: ${keywordFilename}`)
       }
 
       this.porcupine = new Porcupine(
@@ -177,16 +193,32 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
       this.config = loadConfig()
       const enableCursor = this.config.enableCursor ?? true
       const enableClaude = this.config.enableClaude ?? true
+      const enableVSCode = this.config.enableVSCode ?? false
+      const enableBlackbox = this.config.enableBlackbox ?? false
       
       console.log('🎤 Wake word detected!')
       
-      // If neither command is enabled, do nothing
-      if (!enableCursor && !enableClaude) {
+      // If no command is enabled, do nothing
+      if (!enableCursor && !enableClaude && !enableVSCode && !enableBlackbox) {
         return
       }
 
       // Execute commands in Windows shell so they run side-by-side
       const spawnCursorCommand = () => {
+        if (process.platform === 'linux') {
+          try {
+            const child = spawn('cursor', [], { detached: true, stdio: 'ignore' })
+            child.on('error', () => {
+              try {
+                const codeChild = spawn('code', [], { detached: true, stdio: 'ignore' })
+                codeChild.unref()
+              } catch {}
+            })
+            child.unref()
+          } catch {}
+          return
+        }
+
         // Execute cursor command silently for production
         try {
           // Try direct spawn first (most reliable)
@@ -233,6 +265,41 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
       }
 
       const spawnClaudeCommand = () => {
+        if (process.platform === 'linux') {
+          try {
+            // Use Ghostty terminal to run claude
+            const child = spawn('ghostty', ['-e', 'claude'], { 
+              detached: true, 
+              stdio: 'ignore',
+              env: { ...process.env }
+            })
+            child.on('error', () => {
+              // Fallback to other terminals if ghostty not available
+              try {
+                const kittyChild = spawn('kitty', ['-e', 'claude'], { 
+                  detached: true, 
+                  stdio: 'ignore',
+                  env: { ...process.env }
+                })
+                kittyChild.on('error', () => {
+                  // Final fallback: use x-terminal-emulator
+                  try {
+                    const defaultTermChild = spawn('x-terminal-emulator', ['-e', 'claude'], { 
+                      detached: true, 
+                      stdio: 'ignore',
+                      env: { ...process.env }
+                    })
+                    defaultTermChild.unref()
+                  } catch {}
+                })
+                kittyChild.unref()
+              } catch {}
+            })
+            child.unref()
+          } catch {}
+          return
+        }
+
         // Open WSL terminal and directly execute claude command
         try {
           // Use Windows Terminal to open WSL and directly execute the claude command
@@ -256,6 +323,45 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
         }
       }
 
+      const spawnVSCodeCommand = () => {
+        if (process.platform === 'linux') {
+          try {
+            const child = spawn('code', [], { detached: true, stdio: 'ignore' })
+            child.unref()
+          } catch {}
+          return
+        }
+
+        // Execute VS Code command silently for Windows
+        try {
+          // Try direct spawn first (most reliable)
+          const vscodePath = `${process.env.LOCALAPPDATA}\\Programs\\Microsoft VS Code\\Code.exe`
+          
+          const directChild = spawn(vscodePath, [], {
+            detached: true,
+            stdio: 'ignore'
+          })
+          
+          directChild.on('error', () => {
+            // Fallback to 'code' command if direct spawn fails
+            try {
+              const codeChild = spawn('code', [], {
+                detached: true,
+                stdio: 'ignore'
+              })
+              codeChild.unref()
+            } catch {
+              // Silent failure - VS Code not available
+            }
+          })
+          
+          directChild.unref()
+          
+        } catch {
+          // Silent failure for production
+        }
+      }
+
             if (enableClaude) {
         // Execute Claude command first
         spawnClaudeCommand()
@@ -267,12 +373,76 @@ class EnhancedWakeWordDetector implements WakeWordDetector {
           spawnCursorCommand()
         }, 500)
       }
+
+      if (enableVSCode) {
+        // Launch VS Code command with delay to avoid interference
+        setTimeout(() => {
+          spawnVSCodeCommand()
+        }, 1000)
+      }
+
+      const spawnBlackboxCommand = () => {
+        if (process.platform === 'linux') {
+          try {
+            // Use Ghostty terminal to run blackbox
+            const child = spawn('ghostty', ['-e', 'blackbox'], { 
+              detached: true, 
+              stdio: 'ignore',
+              env: { ...process.env }
+            })
+            child.on('error', () => {
+              // Fallback to other terminals if ghostty not available
+              try {
+                const kittyChild = spawn('kitty', ['-e', 'blackbox'], { 
+                  detached: true, 
+                  stdio: 'ignore',
+                  env: { ...process.env }
+                })
+                kittyChild.on('error', () => {
+                  // Final fallback: use x-terminal-emulator
+                  try {
+                    const defaultTermChild = spawn('x-terminal-emulator', ['-e', 'blackbox'], { 
+                      detached: true, 
+                      stdio: 'ignore',
+                      env: { ...process.env }
+                    })
+                    defaultTermChild.unref()
+                  } catch {}
+                })
+                kittyChild.unref()
+              } catch {}
+            })
+            child.unref()
+          } catch {}
+          return
+        }
+
+        // Windows: Open terminal with blackbox
+        try {
+          const terminalChild = spawn('cmd', ['/c', 'start', 'wt', 'wsl', '-e', 'bash', '-c', 'blackbox'], {
+            detached: true,
+            stdio: 'ignore'
+          })
+          terminalChild.unref()
+        } catch {
+          // Silent failure
+        }
+      }
+
+      if (enableBlackbox) {
+        // Launch Blackbox command with delay to avoid interference
+        setTimeout(() => {
+          spawnBlackboxCommand()
+        }, 1500)
+      }
     } catch (error) {
       // Only show fallback if at least one option is enabled
       const enableCursor = this.config.enableCursor ?? true
       const enableClaude = this.config.enableClaude ?? true
+      const enableVSCode = this.config.enableVSCode ?? false
+      const enableBlackbox = this.config.enableBlackbox ?? false
       
-      if (enableCursor || enableClaude) {
+      if (enableCursor || enableClaude || enableVSCode || enableBlackbox) {
         // Fallback: Try using cmd to start Windows Terminal
         try {
           const fallbackChild = spawn('cmd', ['/c', 'start', 'wt', 'wsl'], {
@@ -341,14 +511,18 @@ function saveConfig(config: Config): void {
 }
 
 function createWindow(): void {
+  // Detect Linux/Wayland for tiling WM compatibility
+  const isLinux = process.platform === 'linux'
+  const isWayland = process.env.XDG_SESSION_TYPE === 'wayland' || process.env.WAYLAND_DISPLAY !== undefined
+  
   // Create the browser window
   mainWindow = new BrowserWindow({
-    width: 650,
-    height: 750,
-    minWidth: 550,
-    minHeight: 650,
-    maxWidth: 850,
-    maxHeight: 950,
+    width: isLinux ? 480 : 650,
+    height: isLinux ? 600 : 750,
+    minWidth: 380,
+    minHeight: 400,
+    maxWidth: isLinux ? undefined : 850,
+    maxHeight: isLinux ? undefined : 950,
     title: 'Wake Word Detector - Settings',
     webPreferences: {
       nodeIntegration: false,
@@ -362,20 +536,21 @@ function createWindow(): void {
     },
     icon: (() => {
       let iconPath: string
+      const iconFile = isLinux ? 'wakeword.png' : 'app_small.ico'
       
       if (isPackaged) {
         // Try multiple possible locations for packaged app
         const possiblePaths = [
-          join(process.resourcesPath, 'assets/app_small.ico'), // electron-packager
-          join(__dirname, '../../assets/app_small.ico'), // relative from main process
-          join(process.cwd(), 'assets/app_small.ico'), // current working directory
-          join(process.execPath, '../assets/app_small.ico'), // relative to executable
-          join(process.execPath, '../../assets/app_small.ico'), // one level up from executable
+          join(process.resourcesPath, `assets/${iconFile}`), // electron-packager
+          join(__dirname, `../../assets/${iconFile}`), // relative from main process
+          join(process.cwd(), `assets/${iconFile}`), // current working directory
+          join(process.execPath, `../assets/${iconFile}`), // relative to executable
+          join(process.execPath, `../../assets/${iconFile}`), // one level up from executable
         ]
         
         iconPath = possiblePaths.find(path => existsSync(path)) || possiblePaths[0]
       } else {
-        iconPath = join(__dirname, '../../assets/app_small.ico')
+        iconPath = join(__dirname, `../../assets/${iconFile}`)
       }
       
       if (!existsSync(iconPath)) {
@@ -384,16 +559,16 @@ function createWindow(): void {
       
       return iconPath
     })(),
-    frame: false, // Remove default title bar
-    titleBarStyle: 'hidden',
+    frame: isLinux ? true : false, // Use native frame on Linux for better tiling WM support
+    titleBarStyle: isLinux ? 'default' : 'hidden',
     show: false, // Don't show immediately
     autoHideMenuBar: true,
-    resizable: false, // Fixed size for container-only view
+    resizable: true, // Allow resizing for better compatibility
     alwaysOnTop: false,
     skipTaskbar: false,
-    transparent: true, // Make window transparent
-    backgroundColor: '#00000000', // Transparent background
-    roundedCorners: true,
+    transparent: isLinux ? false : true, // Disable transparency on Linux/Wayland
+    backgroundColor: isLinux ? '#1e1e1e' : '#00000000', // Solid bg on Linux
+    roundedCorners: !isLinux,
     // Fix for background flickering issues
     paintWhenInitiallyHidden: false,
   })
@@ -508,8 +683,8 @@ function createTrayIcons() {
   }
   
   const iconPaths = {
-    listening: join(basePath, 'Green.ico'),
-    stopped: join(basePath, 'Red.ico')
+    listening: (process.platform === 'linux' && existsSync(join(basePath, 'wakeword.png'))) ? join(basePath, 'wakeword.png') : join(basePath, 'Green.ico'),
+    stopped: (process.platform === 'linux' && existsSync(join(basePath, 'wakeword.png'))) ? join(basePath, 'wakeword.png') : join(basePath, 'Red.ico')
   }
   
   // Validate that icon files exist
@@ -714,6 +889,7 @@ app.whenReady().then(async () => {
   if (!isStartupLaunch) {
     // Only create window if not launched from startup
     // User can access via tray icon
+    createWindow()
   }
   
   // Create window if no other windows are open (macOS)
@@ -785,26 +961,28 @@ ipcMain.handle('test-api-key', async (_, apiKey: string): Promise<{ success: boo
   }
 })
 
-ipcMain.handle('test-keyword', async (): Promise<{ exists: boolean; path?: string }> => {
+ipcMain.handle('test-keyword', async (): Promise<{ exists: boolean; path?: string; platform?: string }> => {
   try {
     let keywordPath: string
+    const keywordFilename = getKeywordFilename()
     
     if (isPackaged) {
       const possiblePaths = [
-        join(process.resourcesPath, 'keywords/hey-claude.ppn'),
-        join(__dirname, '../../keywords/hey-claude.ppn'),
-        join(process.cwd(), 'keywords/hey-claude.ppn'),
-        join(process.execPath, '../keywords/hey-claude.ppn'),
-        join(process.execPath, '../../keywords/hey-claude.ppn'),
+        join(process.resourcesPath, `keywords/${keywordFilename}`),
+        join(__dirname, `../../keywords/${keywordFilename}`),
+        join(process.cwd(), `keywords/${keywordFilename}`),
+        join(process.execPath, `../keywords/${keywordFilename}`),
+        join(process.execPath, `../../keywords/${keywordFilename}`),
       ]
       keywordPath = possiblePaths.find(path => existsSync(path)) || possiblePaths[0]
     } else {
-      keywordPath = join(__dirname, '../../keywords/hey-claude.ppn')
+      keywordPath = join(__dirname, `../../keywords/${keywordFilename}`)
     }
     
     const exists = existsSync(keywordPath)
+    const platform = process.platform === 'win32' ? 'windows' : process.platform === 'darwin' ? 'mac' : 'linux'
     
-    return { exists, path: exists ? keywordPath : undefined }
+    return { exists, path: exists ? keywordPath : undefined, platform }
   } catch (error) {
     return { exists: false }
   }

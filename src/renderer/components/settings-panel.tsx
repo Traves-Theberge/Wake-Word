@@ -1,10 +1,17 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { useWakeWordConfig } from '@/hooks/use-wake-word-config'
 
-interface SettingsPanelProps {}
+// Mock IPC for development
+const mockIPC = {
+  invoke: async (channel: string): Promise<any> => {
+    console.log(`IPC Invoke: ${channel}`)
+    return { success: true }
+  }
+}
 
-export function SettingsPanel({}: SettingsPanelProps) {
+const ipc = (window as any).electronAPI || mockIPC
+
+export function SettingsPanel() {
   const { 
     config, 
     isLoading, 
@@ -28,7 +35,9 @@ export function SettingsPanel({}: SettingsPanelProps) {
       const result = await saveConfig({ 
         apiKey: config.apiKey,
         enableCursor: config.enableCursor,
-        enableClaude: config.enableClaude 
+        enableClaude: config.enableClaude,
+        enableVSCode: config.enableVSCode,
+        enableBlackbox: config.enableBlackbox 
       })
       setButtonStates(prev => ({ ...prev, save: result.success ? 'success' : 'error' }))
       setTimeout(() => setButtonStates(prev => ({ ...prev, save: 'normal' })), 2000)
@@ -109,218 +118,110 @@ export function SettingsPanel({}: SettingsPanelProps) {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-8"
-    >
-      {/* Main Settings Card */}
-      <div className="te-card">
-        {/* Listening Status */}
-        <div className="text-center mb-8">
-          <motion.button
-            onClick={handleToggleListening}
-            disabled={isToggling || !config.apiKey.trim()}
-            className={`te-button te-no-drag mb-6 ${
-              isListening ? 'te-button-stop' : 'te-button-start'
-            }`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.2 }}
+    <div className="te-card">
+      {/* Close button */}
+      <button 
+        className="te-close-btn"
+        onClick={() => ipc.invoke('window-close')}
+        title="Close"
+      >
+        <svg width="12" height="12" viewBox="0 0 14 14">
+          <path d="M3 3L11 11M11 3L3 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </button>
+
+      {/* Start/Stop Button */}
+      <div className="text-center" style={{ marginTop: '0.25rem' }}>
+        <button
+          onClick={handleToggleListening}
+          disabled={isToggling || !config.apiKey.trim()}
+          className={`te-button ${isListening ? 'te-button-stop' : 'te-button-start'}`}
+        >
+          {isToggling ? 'Processing...' : isListening ? 'Stop Listening' : 'Start Listening'}
+        </button>
+      </div>
+      
+      {/* Access Key */}
+      <div className="te-form-group">
+        <label className="te-label" htmlFor="apiKey">Access Key</label>
+        <div style={{ position: 'relative' }}>
+          <input
+            id="apiKey"
+            type={showApiKey ? "text" : "password"}
+            value={config.apiKey}
+            onChange={(e) => config.setApiKey(e.target.value)}
+            placeholder="Enter your Picovoice access key"
+            className="te-input te-no-drag"
+            style={{ paddingRight: '2rem' }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowApiKey(!showApiKey)}
+            style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}
           >
-            {isToggling ? (
-              <>
-                <div className="te-spinner w-4 h-4 mr-2" />
-                {isListening ? 'Stopping...' : 'Starting...'}
-              </>
-            ) : (
-              <>
-                {isListening ? 'Stop Listening' : 'Start Listening'}
-              </>
-            )}
-          </motion.button>
+            {showApiKey ? '👁️' : '👁️‍🗨️'}
+          </button>
         </div>
-        
-        <div className="te-form-group">
-          <label className="te-label" htmlFor="apiKey">
-            Access Key
-          </label>
-          <div className="relative">
-            <input
-              id="apiKey"
-              type={showApiKey ? "text" : "password"}
-              value={config.apiKey}
-              onChange={(e) => config.setApiKey(e.target.value)}
-              placeholder="Enter your Picovoice access key"
-              className="te-input pr-16 te-no-drag"
-            />
-            <button
-              type="button"
-              onClick={() => setShowApiKey(!showApiKey)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-te-muted hover:text-te-text transition-colors duration-200 te-no-drag"
-              aria-label={showApiKey ? "Hide API key" : "Show API key"}
-            >
-              {showApiKey ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              )}
-            </button>
-          </div>
-          <p className="te-help-text">
-            Get your free API key from{' '}
-            <a 
-              href="https://console.picovoice.ai/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-te-orange hover:text-te-orange-dark font-medium underline te-no-drag"
-            >
-              Picovoice Console
-            </a>
-          </p>
-        </div>
-
-        <div className="te-form-group">
-          <div className="text-center mb-4">
-            <span className="text-te-text font-medium text-xl">Command Options</span>
-          </div>
-          
-          <div className="flex items-center justify-center gap-8">
-            {/* Cursor Toggle */}
-            <label className="te-checkbox-container te-no-drag">
-              <input
-                type="checkbox"
-                checked={config.enableCursor}
-                onChange={(e) => config.setEnableCursor(e.target.checked)}
-                className="sr-only te-no-drag"
-              />
-              <div className="te-checkbox-wrapper">
-                <div className={`te-checkbox ${config.enableCursor ? 'checked' : ''}`}>
-                  <svg 
-                    className="te-checkbox-icon" 
-                    fill="currentColor" 
-                    viewBox="0 0 20 20"
-                  >
-                    <path 
-                      fillRule="evenodd" 
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
-                      clipRule="evenodd" 
-                    />
-                  </svg>
-                </div>
-              </div>
-              <span className="te-checkbox-label">
-                Cursor
-              </span>
-            </label>
-
-            {/* Claude Toggle */}
-            <label className="te-checkbox-container te-no-drag">
-              <input
-                type="checkbox"
-                checked={config.enableClaude}
-                onChange={(e) => config.setEnableClaude(e.target.checked)}
-                className="sr-only te-no-drag"
-              />
-              <div className="te-checkbox-wrapper">
-                <div className={`te-checkbox ${config.enableClaude ? 'checked' : ''}`}>
-                  <svg 
-                    className="te-checkbox-icon" 
-                    fill="currentColor" 
-                    viewBox="0 0 20 20"
-                  >
-                    <path 
-                      fillRule="evenodd" 
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
-                      clipRule="evenodd" 
-                    />
-                  </svg>
-                </div>
-              </div>
-              <span className="te-checkbox-label">
-                Claude
-              </span>
-            </label>
-          </div>
-
-        </div>
-
-        <div className="flex gap-4 justify-center">
-          <motion.button
-            onClick={handleTestKey}
-            disabled={isTestingConnection || !config.apiKey.trim()}
-            className={`te-button te-button-secondary flex-1 max-w-xs te-no-drag ${
-              buttonStates.test === 'success' ? 'te-button-success' : 
-              buttonStates.test === 'error' ? 'te-button-error' : ''
-            }`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-          >
-            {isTestingConnection ? (
-              <>
-                <div className="te-spinner w-4 h-4 mr-2" />
-                Testing...
-              </>
-            ) : buttonStates.test === 'success' ? (
-              <>
-                <span className="mr-2">✅</span>
-                Valid
-              </>
-            ) : buttonStates.test === 'error' ? (
-              <>
-                <span className="mr-2">❌</span>
-                Invalid
-              </>
-            ) : (
-              'Test Key'
-            )}
-          </motion.button>
-          
-          <motion.button
-            onClick={handleSaveConfig}
-            disabled={!config.apiKey.trim() || isSaving}
-            className={`te-button te-button-primary flex-1 max-w-xs te-no-drag ${
-              buttonStates.save === 'success' ? 'te-button-success' : 
-              buttonStates.save === 'error' ? 'te-button-error' : ''
-            }`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-          >
-            {isSaving ? (
-              <>
-                <div className="te-spinner w-4 h-4 mr-2" />
-                Saving...
-              </>
-            ) : buttonStates.save === 'success' ? (
-              <>
-                <span className="mr-2">✅</span>
-                Saved
-              </>
-            ) : buttonStates.save === 'error' ? (
-              <>
-                <span className="mr-2">❌</span>
-                Failed
-              </>
-            ) : (
-              'Save Configuration'
-            )}
-          </motion.button>
-        </div>
-
-        {/* Removed popup messages */}
+        <p className="te-help-text">
+          Get your free API key from{' '}
+          <a href="https://console.picovoice.ai/" target="_blank" rel="noopener noreferrer" className="text-te-orange te-no-drag" style={{ textDecoration: 'underline' }}>
+            Picovoice Console
+          </a>
+        </p>
       </div>
 
+      {/* Command Options */}
+      <div className="te-form-group">
+        <div className="te-label">Command Options</div>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+          <label className="te-checkbox-container te-no-drag">
+            <div className={`te-checkbox ${config.enableCursor ? 'checked' : ''}`}>
+              {config.enableCursor && <svg className="te-checkbox-icon" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
+            </div>
+            <input type="checkbox" checked={config.enableCursor} onChange={(e) => config.setEnableCursor(e.target.checked)} style={{ display: 'none' }} />
+            <span className="te-checkbox-label">Cursor</span>
+          </label>
+          <label className="te-checkbox-container te-no-drag">
+            <div className={`te-checkbox ${config.enableVSCode ? 'checked' : ''}`}>
+              {config.enableVSCode && <svg className="te-checkbox-icon" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
+            </div>
+            <input type="checkbox" checked={config.enableVSCode} onChange={(e) => config.setEnableVSCode(e.target.checked)} style={{ display: 'none' }} />
+            <span className="te-checkbox-label">VS Code</span>
+          </label>
+          <label className="te-checkbox-container te-no-drag">
+            <div className={`te-checkbox ${config.enableClaude ? 'checked' : ''}`}>
+              {config.enableClaude && <svg className="te-checkbox-icon" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
+            </div>
+            <input type="checkbox" checked={config.enableClaude} onChange={(e) => config.setEnableClaude(e.target.checked)} style={{ display: 'none' }} />
+            <span className="te-checkbox-label">Claude</span>
+          </label>
+          <label className="te-checkbox-container te-no-drag">
+            <div className={`te-checkbox ${config.enableBlackbox ? 'checked' : ''}`}>
+              {config.enableBlackbox && <svg className="te-checkbox-icon" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
+            </div>
+            <input type="checkbox" checked={config.enableBlackbox} onChange={(e) => config.setEnableBlackbox(e.target.checked)} style={{ display: 'none' }} />
+            <span className="te-checkbox-label">Blackbox</span>
+          </label>
+        </div>
+      </div>
 
-
-      {/* Removed error popup messages */}
-    </motion.div>
+      {/* Action Buttons */}
+      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+        <button
+          onClick={handleTestKey}
+          disabled={isTestingConnection || !config.apiKey.trim()}
+          className={`te-button te-button-secondary te-no-drag ${buttonStates.test === 'success' ? 'te-button-success' : buttonStates.test === 'error' ? 'te-button-error' : ''}`}
+        >
+          {isTestingConnection ? 'Testing...' : buttonStates.test === 'success' ? '✅ Valid' : buttonStates.test === 'error' ? '❌ Invalid' : 'Test Key'}
+        </button>
+        <button
+          onClick={handleSaveConfig}
+          disabled={!config.apiKey.trim() || isSaving}
+          className={`te-button te-button-primary te-no-drag ${buttonStates.save === 'success' ? 'te-button-success' : buttonStates.save === 'error' ? 'te-button-error' : ''}`}
+        >
+          {isSaving ? 'Saving...' : buttonStates.save === 'success' ? '✅ Saved' : buttonStates.save === 'error' ? '❌ Failed' : 'Save'}
+        </button>
+      </div>
+    </div>
   )
 } 

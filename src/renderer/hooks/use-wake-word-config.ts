@@ -7,6 +7,10 @@ interface WakeWordConfig {
   setEnableCursor: (value: boolean) => void
   enableClaude: boolean
   setEnableClaude: (value: boolean) => void
+  enableVSCode: boolean
+  setEnableVSCode: (value: boolean) => void
+  enableBlackbox: boolean
+  setEnableBlackbox: (value: boolean) => void
 }
 
 interface TestConnectionParams {
@@ -27,6 +31,8 @@ interface SaveConfigParams {
   apiKey: string
   enableCursor?: boolean
   enableClaude?: boolean
+  enableVSCode?: boolean
+  enableBlackbox?: boolean
 }
 
 interface SaveConfigResult {
@@ -79,6 +85,8 @@ export function useWakeWordConfig(): UseWakeWordConfigReturn {
   const [apiKey, setApiKey] = useState('')
   const [enableCursor, setEnableCursor] = useState(true)
   const [enableClaude, setEnableClaude] = useState(true)
+  const [enableVSCode, setEnableVSCode] = useState(false)
+  const [enableBlackbox, setEnableBlackbox] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isTestingConnection, setIsTestingConnection] = useState(false)
   const [isTestingKeyword, setIsTestingKeyword] = useState(false)
@@ -93,6 +101,8 @@ export function useWakeWordConfig(): UseWakeWordConfigReturn {
         setApiKey(config?.picovoiceAccessKey || '')
         setEnableCursor(config?.enableCursor ?? true)
         setEnableClaude(config?.enableClaude ?? true)
+        setEnableVSCode(config?.enableVSCode ?? false)
+        setEnableBlackbox(config?.enableBlackbox ?? false)
       } catch (error) {
         console.error('Failed to load config:', error)
       } finally {
@@ -134,7 +144,7 @@ export function useWakeWordConfig(): UseWakeWordConfigReturn {
     }
   }, [])
 
-  const saveConfig = useCallback(async ({ apiKey, enableCursor, enableClaude }: SaveConfigParams): Promise<SaveConfigResult> => {
+  const saveConfig = useCallback(async ({ apiKey, enableCursor, enableClaude, enableVSCode, enableBlackbox }: SaveConfigParams): Promise<SaveConfigResult> => {
     if (!apiKey.trim()) {
       return { success: false, error: 'API key is required' }
     }
@@ -144,7 +154,9 @@ export function useWakeWordConfig(): UseWakeWordConfigReturn {
       const result = await ipc.invoke('save-config', { 
         picovoiceAccessKey: apiKey.trim(),
         enableCursor: enableCursor,
-        enableClaude: enableClaude
+        enableClaude: enableClaude,
+        enableVSCode: enableVSCode,
+        enableBlackbox: enableBlackbox
       })
       return result
     } catch (error) {
@@ -164,7 +176,11 @@ export function useWakeWordConfig(): UseWakeWordConfigReturn {
       enableCursor,
       setEnableCursor,
       enableClaude,
-      setEnableClaude
+      setEnableClaude,
+      enableVSCode,
+      setEnableVSCode,
+      enableBlackbox,
+      setEnableBlackbox
     },
     isLoading,
     testConnection,

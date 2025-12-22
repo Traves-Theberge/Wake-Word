@@ -48,6 +48,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Development and production build support
 - Comprehensive asset and icon management
 
+## [1.1.0] - 2025-07-20
+
+### Added
+- **Linux Support** 🐧
+  - Full compatibility with Arch Linux and other Linux distributions
+  - Platform-specific keyword file detection (`hey-claude_en_linux_v4_0_0.ppn`)
+  - Native window frame support for tiling window managers (Wayland/X11)
+  - PNG icon support for Linux system tray
+  - Linux-optimized window sizing and layout
+
+- **New Command Options**
+  - VS Code launch support alongside Cursor IDE
+  - Blackbox terminal command option
+  - Ghostty terminal support for Claude CLI on Linux
+  - Fallback terminal chain: Ghostty → Kitty → x-terminal-emulator
+
+- **Platform-Specific Keyword Files**
+  - Automatic detection of correct `.ppn` file based on OS
+  - Support for Windows, Linux, and macOS keyword files
+  - Clear naming convention: `hey-claude_en_<platform>_v4_0_0.ppn`
+
+### Changed
+- Upgraded Picovoice Porcupine SDK from v3.0.x to v4.0.1 for latest keyword file support
+- Simplified UI layout for better cross-platform compatibility
+- Improved window configuration for tiling window managers
+- Updated clean scripts to use cross-platform `rm -rf` commands
+- Added `dist:linux` npm script for Linux packaging
+
+### Fixed
+- Ghostty terminal spawn syntax (use `-e` flag instead of `--`)
+- Window transparency issues on Linux/Wayland
+- Icon loading for non-Windows platforms
+
+### Technical
+- React and React-DOM now explicit dependencies (v19.2.3)
+- esbuild upgraded to v0.27.2
+- Vite upgraded to v7.3.0
+- Added Linux-specific spawn commands for Cursor, VS Code, Claude, and Blackbox
+
 ## [Unreleased]
 
 ### Planned
@@ -57,7 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Voice feedback confirmation system
 - Usage analytics and statistics
 - Improved error reporting and debugging
-- Linux and macOS compatibility
+- macOS compatibility improvements
 - Custom wake word training integration
 - Plugin system for additional commands
 - Voice command chaining support

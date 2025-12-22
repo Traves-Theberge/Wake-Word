@@ -6,84 +6,65 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* Prevent text selection globally */
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
 
-/* Force custom styles to override Tailwind */
-.te-button,
-.te-button-primary,
-.te-button-secondary,
-.te-input {
-  all: unset;
-  box-sizing: border-box;
-}
-
-html, body {
-  background: transparent !important;
+html, body, #root {
+  background: #1e1e1e !important;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: #ffffff;
   margin: 0;
   padding: 0;
-  /* Prevent white flashing during window transitions */
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  /* Improve rendering performance */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  /* Prevent text selection */
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* Container styles */
-.te-draggable-area {
-  -webkit-app-region: drag;
-  background: transparent;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  margin: 0;
-  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  /* Prevent background flickering */
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  /* Improve rendering performance */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
 }
 
-.te-container {
-  position: relative;
-  width: fit-content;
-  margin: 0;
-  max-width: 100%;
-  max-height: 100%;
-  -webkit-app-region: no-drag;
-}
-
-.te-no-drag {
-  -webkit-app-region: no-drag;
+.te-app {
+  background: #1e1e1e;
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Card styles */
 .te-card {
   background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
   border: 1px solid #404040;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  padding: 2rem;
-  width: 420px;
-  max-width: 100%;
+  border-radius: 8px;
+  padding: 0.5rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+  overflow-y: auto;
+}
+
+/* Close button */
+.te-close-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #404040;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 10;
+}
+
+.te-close-btn:hover {
+  background: #555;
 }
 
 /* Button styles */
@@ -91,15 +72,14 @@ html, body {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border-radius: 12px !important;
+  border-radius: 6px !important;
   font-weight: 500 !important;
   transition: all 0.2s !important;
   outline: none !important;
   cursor: pointer !important;
   border: none !important;
-  padding: 0.75rem 1.5rem !important;
-  font-size: 1rem !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  padding: 0.4rem 0.8rem !important;
+  font-size: 0.8rem !important;
 }
 
 .te-button:disabled {
@@ -117,22 +97,22 @@ html, body {
 }
 
 .te-button-secondary {
-  background: linear-gradient(135deg, #3a3a3a 0%, #2e2e2e 100%) !important;
+  background: #3a3a3a !important;
   color: #ffffff !important;
   border: 1px solid #505050 !important;
 }
 
 .te-button-secondary:hover {
-  background: linear-gradient(135deg, #404040 0%, #343434 100%) !important;
+  background: #454545 !important;
 }
 
 .te-button-success {
-  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%) !important;
+  background: #4caf50 !important;
   color: white !important;
 }
 
 .te-button-error {
-  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%) !important;
+  background: #f44336 !important;
   color: white !important;
 }
 
@@ -141,34 +121,22 @@ html, body {
   color: white !important;
 }
 
-.te-button-start:hover {
-  background: linear-gradient(135deg, #e55a2b 0%, #cc4f24 100%) !important;
-}
-
 .te-button-stop {
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
   color: white !important;
-}
-
-.te-button-stop:hover {
-  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
 }
 
 /* Input styles */
 .te-input {
   width: 100% !important;
   border: 1px solid #404040 !important;
-  border-radius: 12px !important;
+  border-radius: 6px !important;
   color: #ffffff !important;
-  background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%) !important;
-  padding: 0.75rem 1rem !important;
-  font-size: 1rem !important;
-  transition: all 0.2s !important;
+  background: #2a2a2a !important;
+  padding: 0.4rem 0.6rem !important;
+  font-size: 0.8rem !important;
   outline: none !important;
-  /* Allow text selection in input fields */
   -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
   user-select: text !important;
 }
 
@@ -178,207 +146,53 @@ html, body {
 
 .te-input:focus {
   border-color: #ff6b35 !important;
-  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.3) !important;
 }
 
 /* Text styles */
-.te-title {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #ffffff;
-  margin-bottom: 1rem;
-  text-align: center;
-  background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.te-subtitle {
-  color: #888888;
-  font-size: 1.25rem;
-  font-weight: 500;
-  text-align: center;
-}
-
-.te-section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
 .te-label {
   display: block;
   font-weight: 500;
   color: #ffffff;
   text-align: center;
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
 }
 
 .te-help-text {
   color: #888888;
   text-align: center;
-  font-size: 1rem;
-  margin-top: 1rem;
-}
-
-.te-error-text {
-  color: #f44336;
-  text-align: center;
-  font-size: 1rem;
-  margin-top: 1rem;
+  font-size: 0.65rem;
+  margin-top: 0.25rem;
 }
 
 /* Form group styles */
 .te-form-group {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }
 
-.te-section {
-  margin-bottom: 2rem;
-}
-
-/* Header styles */
-.te-header {
-  text-align: center;
-  padding: 4rem 0;
-}
-
-/* Status styles */
-.te-status-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.te-status-active {
-  background-color: #4caf50;
-  box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
-}
-
-.te-status-inactive {
-  background-color: #888888;
-}
-
-.te-status-error {
-  background-color: #f44336;
-  box-shadow: 0 0 12px rgba(244, 67, 54, 0.6);
-}
-
-/* Close button */
-.te-floating-close-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  transition: all 0.2s;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
-  backdrop-filter: blur(8px);
-  cursor: pointer;
-  -webkit-app-region: no-drag;
-}
-
-.te-floating-close-button:hover {
-  background: rgba(244, 67, 54, 0.2);
-  border-color: rgba(244, 67, 54, 0.5);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
-}
-
-.te-floating-close-button:active {
-  transform: scale(0.95);
-}
-
-/* Loading spinner */
-.te-spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid #888888;
-  border-top: 2px solid #ff6b35;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Message styles */
-.te-message {
-  border-radius: 16px;
-  text-align: center;
-  margin-top: 1.5rem;
-  padding: 1.5rem;
-  font-size: 1.1rem;
-}
-
-.te-message-success {
-  background: rgba(76, 175, 80, 0.2);
-  border: 1px solid rgba(76, 175, 80, 0.3);
-  color: #81c784;
-}
-
-.te-message-error {
-  background: rgba(244, 67, 54, 0.2);
-  border: 1px solid rgba(244, 67, 54, 0.3);
-  color: #e57373;
-}
-
-/* Animations */
-.te-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-/* All interactive elements should not be draggable */
-button, input, textarea, select, a {
-  -webkit-app-region: no-drag;
-}
-
-/* Custom checkbox styles */
+/* Checkbox styles */
 .te-checkbox-container {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.4rem;
   cursor: pointer;
 }
 
 .te-checkbox-wrapper {
-  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .te-checkbox {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 0.25rem;
-  border: 2px solid #505050;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #404040;
+  border-radius: 4px;
   background: #2a2a2a;
-  transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
 }
 
 .te-checkbox.checked {
@@ -387,8 +201,8 @@ button, input, textarea, select, a {
 }
 
 .te-checkbox-icon {
-  width: 1rem;
-  height: 1rem;
+  width: 12px;
+  height: 12px;
   color: white;
   opacity: 0;
   transition: opacity 0.2s;
@@ -399,8 +213,82 @@ button, input, textarea, select, a {
 }
 
 .te-checkbox-label {
-  font-size: 1.1rem;
-  font-weight: 500;
   color: #ffffff;
-  user-select: none;
-} 
+  font-size: 0.8rem;
+}
+
+/* Spinner */
+.te-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ff6b35;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Floating close button */
+.te-floating-close-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #404040;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.te-floating-close-button:hover {
+  background: #555;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Orange text color */
+.text-te-orange {
+  color: #ff6b35;
+}
+
+.text-te-orange:hover {
+  color: #e55a2b;
+}
+
+/* Muted text */
+.text-te-muted {
+  color: #888888;
+}
+
+.text-te-text {
+  color: #ffffff;
+}
+
+.te-no-drag {
+  -webkit-app-region: no-drag;
+}
