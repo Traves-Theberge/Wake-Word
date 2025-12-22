@@ -47,11 +47,18 @@ ln -sf "$INSTALL_DIR/$APP_NAME" "$BIN_DIR/$APP_NAME"
 
 # Copy icon
 ICON_SRC="$PROJECT_DIR/assets/wakeword.png"
-ICON_DEST="$HOME/.local/share/icons/hicolor/256x256/apps/$APP_NAME.png"
-mkdir -p "$(dirname "$ICON_DEST")"
+# Install to hicolor (standard)
+ICON_DEST_HICOLOR="$HOME/.local/share/icons/hicolor/512x512/apps/$APP_NAME.png"
+mkdir -p "$(dirname "$ICON_DEST_HICOLOR")"
+
+# Install to pixmaps (legacy fallback)
+ICON_DEST_PIXMAPS="$HOME/.local/share/pixmaps/$APP_NAME.png"
+mkdir -p "$(dirname "$ICON_DEST_PIXMAPS")"
+
 if [ -f "$ICON_SRC" ]; then
-    cp "$ICON_SRC" "$ICON_DEST"
-    echo "🎨 Icon installed"
+    cp "$ICON_SRC" "$ICON_DEST_HICOLOR"
+    cp "$ICON_SRC" "$ICON_DEST_PIXMAPS"
+    echo "🎨 Icons installed to hicolor and pixmaps"
 fi
 
 # Create desktop entry
@@ -61,7 +68,7 @@ cat > "$DESKTOP_DIR/$APP_NAME.desktop" << EOF
 Name=$DISPLAY_NAME
 Comment=Voice-activated wake word detection for Hey Claude
 Exec=$INSTALL_DIR/$APP_NAME
-Icon=$APP_NAME
+Icon=$ICON_DEST_HICOLOR
 Terminal=false
 Type=Application
 Categories=Utility;AudioVideo;
@@ -77,7 +84,7 @@ cat > "$AUTOSTART_DIR/$APP_NAME.desktop" << EOF
 Name=$DISPLAY_NAME
 Comment=Voice-activated wake word detection for Hey Claude
 Exec=$INSTALL_DIR/$APP_NAME --startup
-Icon=$APP_NAME
+Icon=$ICON_DEST_HICOLOR
 Terminal=false
 Type=Application
 Categories=Utility;AudioVideo;
