@@ -18,6 +18,8 @@
     "clean:dist": "rm -rf dist",
     "clean:release": "rm -rf release",
     "dist:linux": "npm run build && electron-packager . \"Wake Word Detector\" --platform=linux --arch=x64 --out=release --overwrite --app-copyright=\"Copyright (C) 2025 Traves Theberge\" --app-version=\"1.0.0\" --executable-name=\"wake-word-detector\" --icon=\"assets/wakeword.png\"",
+    "install:linux": "npm run dist:linux && bash scripts/install-linux.sh",
+    "uninstall:linux": "bash scripts/uninstall-linux.sh",
     "prebuild": "npm run clean:dist",
     "predist": "npm run clean",
     "test": "echo No tests configured",
