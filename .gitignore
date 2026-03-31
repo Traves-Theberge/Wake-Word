@@ -119,3 +119,4 @@ tmp/
 # Application specific
 config.json
 settings.json 
+.orchestra/
