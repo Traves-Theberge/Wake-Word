@@ -222,6 +222,11 @@ export function SettingsPanel() {
           {isSaving ? 'Saving...' : buttonStates.save === 'success' ? '✅ Saved' : buttonStates.save === 'error' ? '❌ Failed' : 'Save'}
         </button>
       </div>
+
+      {/* Version */}
+      <p className="te-help-text" style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+        Version {__APP_VERSION__}
+      </p>
     </div>
   )
 } 
