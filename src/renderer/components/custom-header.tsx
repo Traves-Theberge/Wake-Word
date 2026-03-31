@@ -22,10 +22,10 @@ export const FloatingCloseButton: React.FC = () => {
   }
 
   return (
-    <motion.button 
+    <motion.button
       className="te-floating-close-button"
       onClick={handleClose}
-      title="Close"
+      title={`Wake Word Detector v${__APP_VERSION__} — Close`}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
