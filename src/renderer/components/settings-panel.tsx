@@ -222,6 +222,11 @@ export function SettingsPanel() {
           {isSaving ? 'Saving...' : buttonStates.save === 'success' ? '✅ Saved' : buttonStates.save === 'error' ? '❌ Failed' : 'Save'}
         </button>
       </div>
+
+      {/* Version */}
+      <div className="text-center" style={{ marginTop: '0.75rem' }}>
+        <span className="text-te-muted" style={{ fontSize: '0.7rem' }}>v{__APP_VERSION__}</span>
+      </div>
     </div>
   )
 } 
